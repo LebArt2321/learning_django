@@ -1,25 +1,25 @@
+{% extends "myapp/base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <link rel="stylesheet" href="{% static 'myapp/styles.css' %}">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body >
-    <nav>
-        <div>
+{% block content %}
+  <nav class="bg-white shadow-lg">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="flex justify-between">
+	      <div class="flex space-x-7">
             <div>
-                <div>
-                    <div class="flex">
-                        <img class="h-8 w-8" src="{% static 'myapp/images/shop.png' %}" alt="logo"/>
-                        <span class="text-xl">Pro Shop</span>
-                    </div>
-                </div>
+							<a href="#" class="flex items-center px-2 py-4">
+              <img class="h-8 w-8" src="{% static 'myapp/images/shop.png' %}" alt="logo"/>
+              <span class="text-gray-500 font-semibold text-xl">Pro Shop</span>
+						</a>
             </div>
+						<div class="items-center flex space-x-1">
+							<a href="#" class="py-4 px-2 text-gray-500 font-semibold border-b-4 border-green-500">Home</a>
+							<a href="#" class="py-4 px-2 text-gray-500 font-semibold">About</a>
+							<a href="#" class="py-4 px-2 text-gray-500 font-semibold">Contacts</a>
+						</div>
         </div>
-    </nav>
+      </div>
+  	</div>
+  </nav>
     <h4>
         {% for item in items %}
         <a href="{% url 'myapp:detail' item.id %}">
@@ -27,5 +27,4 @@
         </a>
         {% endfor %}
     </h4>
-</body>
-</html>
+		{% endblock content %}
