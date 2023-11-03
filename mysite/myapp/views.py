@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from .models import Product
 
+
 def index(request):
     items = Product.objects.all()
     context = {
@@ -16,3 +17,13 @@ def indexItem(request, my_id):
     }
     return render(request, "myapp/detail.html", context)
 
+def add_item(request):
+    if request.method == "POST":
+        name = request.POST.get("name")
+        price = request.POST.get("price")
+        description = request.POST.get("description")
+        image = request.FILES.get('upload')
+        item = Product(name=name, price=price, description=description, image=image)
+        item.save()
+
+    return render(request, "myapp/additem.html")

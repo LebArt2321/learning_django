@@ -15,7 +15,7 @@
     {% for item in items %}
       <a href="{% url 'myapp:detail' item.id %}">
         <div class="rounded overflow-hidden shadow-lg">
-          <img class="w-full h-[400px]" src="{{item.image.url}}">
+          <img class="w-full h-[400px]" src="{{ item.image.url }}">
           <div class="px-6 py-4">
             <p class="font-bold text-xl mb-2">{{item.name}}</p>
             <p class="font-bold text-xl text-green-500 mb-2">$ {{item.price}}</p>
