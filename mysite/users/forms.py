@@ -8,15 +8,15 @@ class NewUserForm(UserCreationForm):
                                 attrs={"class":"focus:outline-none",
                                        'placeholder':'mail@mail.com',
                                        }))
-    username = forms.CharField(required=True, widget=forms.EmailInput(
+    username = forms.CharField(required=True, widget=forms.TextInput(
                                 attrs={"class":"focus:outline-none",
                                        'placeholder':'Enter username...',
                                        }))
-    password1 = forms.CharField(required=True, widget=forms.EmailInput(
+    password1 = forms.CharField(required=True, widget=forms.PasswordInput(
                                 attrs={"class":"focus:outline-none",
                                        'placeholder':'Enter password',
                                        }))
-    password2 = forms.CharField(required=True, widget=forms.EmailInput(
+    password2 = forms.CharField(required=True, widget=forms.PasswordInput(
                                 attrs={"class":"focus:outline-none",
                                        'placeholder':'Enter same password',
                                        }))
@@ -24,3 +24,11 @@ class NewUserForm(UserCreationForm):
     class Meta:
         model = User
         fields = ('username', 'email', 'password1', 'password2')
+        
+        
+    # def save(self, commit=True):
+    #     user = super(NewUserForm, self).save(commit=False)
+    #     user.email = self.cleaned_data['email']
+    #     if commit:
+    #         user.save()
+    #     return user
