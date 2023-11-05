@@ -63,3 +63,4 @@ def delete_item(request, my_id):
 
     context = {'item': item}
     return render(request, "myapp/deleteitem.html", context)
+
