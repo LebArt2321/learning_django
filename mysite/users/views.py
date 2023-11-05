@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
+from .models import Profile
 from .forms import NewUserForm
 from django.contrib.auth.decorators import login_required
 
@@ -19,5 +20,11 @@ def register(request):
 
 @login_required
 def profile(request):
+    if request.method == "POST":
+        contact_number = request.POST.get("contact_number")
+        image = request.FILES.get('upload')
+        user = request.user
+        person = Profile(user=user,contact_number=contact_number, image=image)
+        person.save()
     return render(request, 'users/profile.html')
 

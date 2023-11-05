@@ -14,10 +14,19 @@
 	</div>
 </div>
 {% else %}
-	<h1>
-		<form action="" method="post">
-			<h1>FORM PROFILE</h1>
-		</form>
+<h1 class="text-2xl m-10 font-bold">Form Profile</h1>
+	<form class="w-2/5 bg-white-700 shadow-md m-10 rounded px-8 pt-6 pb-8 mb-4" method="post" enctype="multipart/form-data">
+		{% csrf_token %}
+		<div class="mb-2">
+
+			<label class="block text-gray-700 text-md fond-bold mb-2" for="contact_number">Contact number</label>
+			<input class="shadow appearance-none border rounded py-2 px-3 mr-10 text-gray-700" type="text" placeholder="Contact number..." name="contact_number" id="contact_number">
+
+			<input class="block mt-4" type="file" accept="image/*" name="upload" id="upload">
+
+			<button class="block bg-green-600 text-white p-3 mt-4" type="submit" name="Save Changes" value="Save Changes">Save Changes</button>
+
+	</form>
 	</h1>
 {% endif %}
 	
