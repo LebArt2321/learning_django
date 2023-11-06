@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DetailView
 
 
-def index(request):
+def index(request):   #ProductListView(ListView):
     items = Product.objects.all()
     context = {
         'items': items
@@ -16,8 +16,9 @@ class ProductListView(ListView):
     model = Product
     template_name = 'myapp/index.html'
     context_object_name = 'items'
+    paginate_by = 2
 
-def indexItem(request, my_id):
+def indexItem(request, my_id):   #ProductDetailView(DetailView):
     item = Product.objects.get(id=my_id)
     context = {
         'item': item
