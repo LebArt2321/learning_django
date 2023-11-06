@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from .models import Product
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DetailView
+from django.db.models import Q
 
 
 def index(request):   #ProductListView(ListView):
@@ -17,6 +18,13 @@ class ProductListView(ListView):
     template_name = 'myapp/index.html'
     context_object_name = 'items'
     paginate_by = 2
+    def get_queryset(self):
+        query = self.request.GET.get('search')
+        if query:
+            # Используйте Q-объекты для выполнения поиска в нескольких полях модели Product.
+            return Product.objects.filter(Q(name__icontains=query) | Q(description__icontains=query))
+        else:
+            return Product.objects.all()
 
 def indexItem(request, my_id):   #ProductDetailView(DetailView):
     item = Product.objects.get(id=my_id)
