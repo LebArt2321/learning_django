@@ -11,8 +11,10 @@
 			<p class="mt-5 text-gray-600">{{ item.description }}</p>
 			<p class="mt-5 text-indigo-600"><a href="{% url 'users:sellerprofile' item.seller.id %}">@{{ item.seller }}</a></p>
 			<p class="mt-5 text-gray-600">{{ item.seller.profile.contact_number }}</p>
+			{% if request.user == item.seller %}
 			<button class="bg-green-500 text-white mt-[50px]"><a href="{% url 'myapp:update_item' item.id %}">Update Item</a></button>
 			<button class="bg-red-500 text-white mt-[50px]"><a href="{% url 'myapp:delete_item' item.id %}">Delete Item</a></button>
+			{% endif %}
 		</div>
 	</div>
 

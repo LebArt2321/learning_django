@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseForbidden
 from .models import Product
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DetailView
 from django.db.models import Q
+from users.models import CustomUser
 
 
 def index(request):   #ProductListView(ListView):
@@ -13,18 +14,36 @@ def index(request):   #ProductListView(ListView):
     }
     return render(request, "myapp/index.html", context)
 
+
+
 class ProductListView(ListView):
     model = Product
     template_name = 'myapp/index.html'
     context_object_name = 'items'
-    paginate_by = 2
+    paginate_by = 3
+
     def get_queryset(self):
         query = self.request.GET.get('search')
+        queryset = Product.objects.all()
+
         if query:
             # Используйте Q-объекты для выполнения поиска в нескольких полях модели Product.
-            return Product.objects.filter(Q(name__icontains=query) | Q(description__icontains=query))
-        else:
-            return Product.objects.all()
+            queryset = queryset.filter(Q(name__icontains=query) | Q(description__icontains=query))
+
+        # Отфильтровать только тех продавцов, у которых is_seller=True
+        queryset = queryset.filter(seller__is_seller=True)
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # Получить список продавцов
+        sellers = CustomUser.objects.filter(is_seller=True)
+
+        context['sellers'] = sellers
+        return context
+
 
 def indexItem(request, my_id):   #ProductDetailView(DetailView):
     item = Product.objects.get(id=my_id)
@@ -59,7 +78,7 @@ def update_item(request, my_id):
         item.description = request.POST.get("description")
         item.image = request.FILES.get('upload', item.image)
         item.save()
-        return redirect("/myapp/")
+        return redirect("/")
 
     context = {'item': item}
     return render(request, "myapp/updateitem.html", context)
@@ -68,7 +87,7 @@ def delete_item(request, my_id):
     item = Product.objects.get(id=my_id)
     if request.method == "POST":
         item.delete()
-        return redirect("/myapp/")
+        return redirect("/")
 
     context = {'item': item}
     return render(request, "myapp/deleteitem.html", context)
