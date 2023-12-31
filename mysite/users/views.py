@@ -5,7 +5,7 @@ from .forms import NewUserForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User, Group
 from users.models import CustomUser
-
+from myapp.models import Product
 
 
 
@@ -40,9 +40,11 @@ def profile(request):
 
 def seller_profile(request, id):
     seller = CustomUser.objects.get(id=id)
+    products = Product.objects.filter(seller=seller)
     
     context = {
-        'seller': seller
+        'seller': seller,
+        'products': products
     }
     
     return render(request, 'users/sellerprofile.html', context)
