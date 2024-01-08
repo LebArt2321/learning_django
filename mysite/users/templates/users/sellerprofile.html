@@ -2,38 +2,48 @@
 
 {% block content %}
 
-<div class="grid p-10 grid-cols-1 lg:grid-cols-3 sm:grid-cols-1">
-	<div class="rounded shadow-lg">
-		<div>
-			{% if seller.profile.image.url %}
-				<img src="{{ seller.profile.image.url }}">
-			{% endif %}
-		</div>
-		<h1 class="font-bold text-xl m-2">{{ seller.username }}</h1>
-		
-		
-	</div>
-	<h2 class="font-bold text-lg mt-4">Товары продавца:</h2>
-		<ul>
-			{% for product in products %}
-				<li>{{ product.name }} - {{ product.price }}</li>
-				<img src="{{ product.image.url }}" alt="{{ seller.username }}" width="150" height="150">
-			{% endfor %}
-		</ul>
+<div class="grid p-10 grid-cols-1 lg:grid-cols-3 sm:grid-cols-1 gap-8">
+    <div class="col-span-1 rounded shadow-lg">
+        <div class="mb-4">
+            {% if seller.profile.image.url %}
+                <img src="{{ seller.profile.image.url }}" class="w-full h-48 object-cover rounded-t">
+            {% endif %}
+        </div>
+        <div class="p-4">
+            <h1 class="font-bold text-2xl mb-2">{{ seller.username }}</h1>
+            <!-- Дополнительная информация о продавце (если есть) -->
+        </div>
+    </div>
 
-		<h2 class="font-bold text-lg mt-4">Мероприятия продавца:</h2>
-        <ul>
-            {% for event in seller.organized_events.all %}
-                <li>{{ event.name }} - {{ event.date }}</li>
-				<div>
-					{% if event.image.url %}
-						<img src="{{ event.image.url }}">
-					{% endif %}
-				</div>
+    <div class="col-span-2 space-y-6 ml-10">
+        <h2 class="font-bold text-lg mb-4">Товары продавца:</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {% for product in products %}
+                <div class="rounded overflow-hidden shadow-lg p-4">
+                    <img src="{{ product.image.url }}" alt="{{ seller.username }}" class="w-full h-32 object-cover mb-2">
+                    <div>
+                        <h3 class="font-bold text-xl mb-2">{{ product.name }}</h3>
+                        <p class="text-gray-700">${{ product.price }}</p>
+                    </div>
+                </div>
             {% endfor %}
-        </ul>
+        </div>
+
+        <h2 class="font-bold text-lg mt-10 mb-4">Мероприятия продавца:</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {% for event in seller.organized_events.all %}
+                <div class="rounded overflow-hidden shadow-lg p-4">
+                    {% if event.image.url %}
+                        <img src="{{ event.image.url }}" alt="{{ event.name }}" class="w-full h-32 object-cover mb-2">
+                    {% endif %}
+                    <div>
+                        <h3 class="font-bold text-xl mb-2">{{ event.name }}</h3>
+                        <p class="text-gray-700">{{ event.date }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
 </div>
-
-
 
 {% endblock content %}

@@ -1,11 +1,12 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseForbidden
-from .models import Product
+from .models import Product, Category
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DetailView
 from django.db.models import Q
 from users.models import CustomUser, Event
 from datetime import datetime
+
 
 
 def index(request):   #ProductListView(ListView):
@@ -63,16 +64,21 @@ class ProductDetailView(DetailView):
 
 @login_required
 def add_item(request):
+    categories = Category.objects.all()
+
     if request.method == "POST":
         name = request.POST.get("name")
         price = request.POST.get("price")
         description = request.POST.get("description")
         image = request.FILES.get('upload')
         seller = request.user
-        item = Product(name=name, price=price, description=description, image=image, seller=seller)
+        category_id = request.POST.get("category")  # Добавлено получение категории из формы
+        category = Category.objects.get(pk=category_id)
+        
+        item = Product(name=name, price=price, description=description, image=image, seller=seller, category=category)
         item.save()
 
-    return render(request, "myapp/additem.html")
+    return render(request, "myapp/additem.html", {'categories': categories})
 
 def add_event(request):
     if request.method == "POST":
