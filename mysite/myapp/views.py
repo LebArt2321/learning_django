@@ -4,7 +4,8 @@ from .models import Product
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DetailView
 from django.db.models import Q
-from users.models import CustomUser
+from users.models import CustomUser, Event
+from datetime import datetime
 
 
 def index(request):   #ProductListView(ListView):
@@ -32,6 +33,9 @@ class ProductListView(ListView):
 
         # Отфильтровать только тех продавцов, у которых is_seller=True
         queryset = queryset.filter(seller__is_seller=True)
+        
+        # Указать порядок сортировки
+        queryset = queryset.order_by('id')
 
         return queryset
 
@@ -69,6 +73,21 @@ def add_item(request):
         item.save()
 
     return render(request, "myapp/additem.html")
+
+def add_event(request):
+    if request.method == "POST":
+        name = request.POST.get("name")
+        image = request.FILES.get('upload')
+        date_str = request.POST.get("date")
+        
+        # Преобразование строки даты в объект datetime
+        date = datetime.strptime(date_str, "%Y-%m-%d").date() if date_str else None
+        
+        organizer = request.user
+        item = Event(name=name, image=image, date=date, organizer=organizer)
+        item.save()
+
+    return render(request, "myapp/addevent.html")
 
 def update_item(request, my_id):
     item = Product.objects.get(id=my_id)

@@ -20,6 +20,20 @@
 				<img src="{{ product.image.url }}" alt="{{ seller.username }}" width="150" height="150">
 			{% endfor %}
 		</ul>
+
+		<h2 class="font-bold text-lg mt-4">Мероприятия продавца:</h2>
+        <ul>
+            {% for event in seller.organized_events.all %}
+                <li>{{ event.name }} - {{ event.date }}</li>
+				<div>
+					{% if event.image.url %}
+						<img src="{{ event.image.url }}">
+					{% endif %}
+				</div>
+            {% endfor %}
+        </ul>
 </div>
+
+
 
 {% endblock content %}

@@ -1,0 +1,26 @@
+{% extends 'myapp/base.html' %}
+
+{% block content %}
+<div class="ml-[200px]">
+    <h1 class="text-2xl m-10 font-bold text-green-600">Add New Event Below</h1>
+    <form class="w-1/3 bg-white shadow-md m-10 px-8 py-8" enctype="multipart/form-data" method="post">
+        {% csrf_token %}
+        <div class="mb-4">
+            <label class="block text-gray-700 text-md fond-bold mb-2" for="name">Event Name</label>
+            <input class="shadow appearance-none border rounded py-2 px-3 mr-10 text-gray-700" type="text"
+                placeholder="Name..." name="name" id="name">
+
+            <label class="block text-gray-700 text-md fond-bold mb-2" for="date">Event Date</label>
+            <input class="shadow appearance-none border rounded py-2 px-3 mr-10 text-gray-700" type="date"
+                placeholder="Date..." name="date" id="date">
+
+            <label class="block text-gray-700 text-md fond-bold mb-2" for="upload">Event Image</label>
+            <input class="block mt-4" type="file" accept="image/*" name="upload" id="upload">
+
+            <button class="block bg-green-600 text-white p-3 mt-4" type="submit" name="Add Event" value="Add Event">Add
+                Event</button>
+        </div>
+    </form>
+</div>
+
+{% endblock content %}

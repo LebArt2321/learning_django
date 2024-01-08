@@ -15,6 +15,8 @@
             {% if user.is_authenticated %}
               {% if user.is_seller %}
                 <a href="{% url 'myapp:add_item' %}" class="py-4 px-2 text-gray-500 font-semibold">Add Item</a>
+                <a href="{% url 'myapp:add_event' %}" class="py-4 px-2 text-gray-500 font-semibold">Add Event</a>
+                
               {% endif %}
               <a class="py-4 px-2 text-gray-500 font-semibold" href='{% url 'users:logout' %}'>Logout</a>
               <a class="py-4 px-2 text-gray-500 font-semibold" href='{% url 'users:profile' %}'>Profile</a>
