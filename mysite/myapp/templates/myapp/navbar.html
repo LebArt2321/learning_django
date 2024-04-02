@@ -5,7 +5,7 @@
             <div class="flex space-x-7">
                 <div>
                     <a href="{% url 'myapp:index' %}" class="flex items-center px-2 py-4">
-                        <img class="h-8 w-8" src="{% static 'myapp/images/shop.png' %}" alt="logo"/>
+                        
                         <span class="text-gray-500 font-semibold text-xl">Project Street</span>
                     </a>
                 </div>
@@ -16,10 +16,16 @@
                         {% if user.is_seller %}
                             <a href="{% url 'myapp:add_item' %}" class="py-4 px-2 text-gray-500 font-semibold">Add Item</a>
                             <a href="{% url 'myapp:add_event' %}" class="py-4 px-2 text-gray-500 font-semibold">Add Event</a>
+                            <!-- Проверяем, является ли пользователь продавцом -->
+                            <a href="{% url 'users:sellerprofile' user.id %}" class="py-4 px-2 text-gray-500 font-semibold">Seller Profile</a>
+                        {% else %}
+                            <!-- Если пользователь не продавец, выводим ссылку на его профиль -->
+                            <a class="py-4 px-2 text-gray-500 font-semibold" href='{% url 'users:profile' %}'>Profile</a>
                         {% endif %}
+                        <!-- Выводим ссылку на выход в обоих случаях -->
                         <a class="py-4 px-2 text-gray-500 font-semibold" href='{% url 'users:logout' %}'>Logout</a>
-                        <a class="py-4 px-2 text-gray-500 font-semibold" href='{% url 'users:profile' %}'>Profile</a>
                     {% else %}
+                        <!-- Если пользователь не аутентифицирован, выводим ссылку на вход -->
                         <a class="py-4 px-2 text-gray-500 font-semibold" href='{% url 'users:login' %}'>Login</a>
                     {% endif %}
                 </div>

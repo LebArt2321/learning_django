@@ -10,7 +10,7 @@
         <p class="text-green-500 text-xl mt-2">₽{{ item.price | intcomma }}</p>
         <p class="mt-3 text-gray-700">{{ item.description }}</p>
         <p class="mt-3 text-gray-700">Категория: {{ item.category }}</p>
-        <p class="mt-3 text-indigo-600"><a href="{% url 'users:sellerprofile' item.seller.id %}">@{{ item.seller }}</a></p>
+        <p class="mt-3 text-indigo-600"><a href="{% url 'users:sellerprofile' item.seller.id %}">prod. by {{ item.seller }}</a></p>
         <p class="mt-3 text-gray-600">Contact Number: {{ item.seller.profile.contact_number }}</p>
 
         {% if request.user == item.seller %}

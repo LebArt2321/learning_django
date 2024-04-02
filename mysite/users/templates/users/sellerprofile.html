@@ -1,49 +1,177 @@
 {% extends 'myapp/base.html' %}
 
 {% block content %}
+<style>
+    body {
+        {% if background_image %}
+        background-image: url('{{ background_image.url }}');
+        background-size: cover;
+        background-position: center;
+        {% else %}
+        background-color: white; /* Белый фон, если нет background-image */
+        {% endif %}
+    }
 
-<div class="grid p-10 grid-cols-1 lg:grid-cols-3 sm:grid-cols-1 gap-8">
-    <div class="col-span-1 rounded shadow-lg">
-        <div class="mb-4">
-            {% if seller.profile.image.url %}
-                <img src="{{ seller.profile.image.url }}" class="w-full h-48 object-cover rounded-t">
-            {% endif %}
-        </div>
-        <div class="p-4">
-            <h1 class="font-bold text-2xl mb-2">{{ seller.username }}</h1>
-            <!-- Дополнительная информация о продавце (если есть) -->
-        </div>
-    </div>
+    
 
-    <div class="col-span-2 space-y-6 ml-10">
-        <h2 class="font-bold text-lg mb-4">Товары продавца:</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {% for product in products %}
-                <div class="rounded overflow-hidden shadow-lg p-4">
-                    <img src="{{ product.image.url }}" alt="{{ seller.username }}" class="w-full h-32 object-cover mb-2">
-                    <div>
-                        <h3 class="font-bold text-xl mb-2">{{ product.name }}</h3>
-                        <p class="text-gray-700">${{ product.price }}</p>
+    .bg-blur {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        {% if background_image %}
+        background-image: url('{{ background_image.url }}');
+        filter: blur(5px);
+        {% endif %}
+        z-index: -1;
+    }
+
+    .profile-container {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .profile-image {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        margin-bottom: 10px;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .products-container,
+    .events-container {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .product,
+    .event {
+        flex: 0 0 calc(33.33% - 20px);
+        margin-bottom: 20px;
+        text-align: center;
+        padding: 10px; /* Добавленные отступы между товарами */
+        box-sizing: border-box; /* Учтем отступы в общей ширине элемента */
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    .product:hover,
+    .event:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .product img,
+    .event img {
+        max-width: 100%;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+    }
+
+    .product-details,
+    .event-details {
+        padding: 15px;
+    }
+
+    .section-title {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .edit-profile-button {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .edit-profile-button a {
+        color: black;
+        border: 2px solid black; /* Добавленный стиль для видимых границ */
+        padding: 10px 20px; /* Добавленный стиль для увеличения отступов кнопки */
+        text-decoration: none; /* Убрать подчеркивание ссылки */
+    }
+</style>
+
+<div class="bg-blur"></div>
+
+<div class="container mx-auto mt-10">
+    <div class="flex justify-center">
+        <div class="w-full max-w-2xl">
+            <div class="profile-container">
+                {% if seller.profile.image.url %}
+                <img src="{{ seller.profile.image.url }}" alt="Seller Image" class="profile-image">
+                {% endif %}
+                <h1 class="text-2xl font-bold mb-5">Профиль продавца: {{ seller.user.username }}</h1>
+                {% if seller_profile.seller_description %}
+                <p class="text-gray-700">{{ seller_profile.seller_description }}</p>
+                {% else %}
+                <p class="text-gray-700">Описание продавца отсутствует.</p>
+                {% endif %}
+                <h2 class="font-bold text-lg mt-4 mb-2 section-title">Контактная информация:</h2>
+                {% if seller_profile.contact_number %}
+                <p class="text-gray-700"><strong>Номер телефона:</strong> {{ seller_profile.contact_number }}</p>
+                {% else %}
+                <p class="text-gray-700"><strong>Номер телефона:</strong> Не указан</p>
+                {% endif %}
+            </div>
+            <div class="w-full mt-10">
+                <h2 class="font-bold text-lg mb-4 section-title">Товары продавца:</h2>
+                <div class="products-container">
+                    {% for product in products %}
+                    <a href="{% url 'myapp:detail' product.id %}">
+                    <div class="rounded overflow-hidden shadow-lg p-4 product">
+                        {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-32 object-cover mb-2">
+                        {% endif %}
+                        <div class="product-details">
+                            <h3 class="font-bold text-xl mb-2">{{ product.name }}</h3>
+                            <p class="text-gray-700">${{ product.price }}</p>
+                        </a>
+                        </div>
+                    
                     </div>
+                    
+                    {% endfor %}
                 </div>
-            {% endfor %}
-        </div>
-
-        <h2 class="font-bold text-lg mt-10 mb-4">Мероприятия продавца:</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {% for event in seller.organized_events.all %}
-                <div class="rounded overflow-hidden shadow-lg p-4">
-                    {% if event.image.url %}
+            </div>
+            <div class="w-full mt-10">
+                <h2 class="font-bold text-lg mb-4 section-title">Мероприятия продавца:</h2>
+                <div class="events-container">
+                    {% for event in seller.organized_events.all %}
+                    <div class="rounded overflow-hidden shadow-lg p-4 event">
+                        {% if event.image %}
                         <img src="{{ event.image.url }}" alt="{{ event.name }}" class="w-full h-32 object-cover mb-2">
-                    {% endif %}
-                    <div>
-                        <h3 class="font-bold text-xl mb-2">{{ event.name }}</h3>
-                        <p class="text-gray-700">{{ event.date }}</p>
+                        {% endif %}
+                        <div class="event-details">
+                            <h3 class="font-bold text-xl mb-2">{{ event.name }}</h3>
+                            <p class="text-gray-700">{{ event.date }}</p>
+                        </div>
                     </div>
+                    {% empty %}
+                    <p class="text-gray-700">Мероприятий пока нет.</p>
+                    {% endfor %}
                 </div>
-            {% endfor %}
+            </div>
         </div>
     </div>
 </div>
 
-{% endblock content %}
+<div class="edit-profile-button" style="text-align: center; margin-top: 20px;">
+    {% if request.user.id == seller_profile.id %}
+    <a class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-5"
+        href="{% url 'users:edit_seller_profile' user.id %}">
+        Редактировать профиль
+    </a>
+    {% endif %}
+</div>
+
+<div style="text-align: center; margin-top: 35px;"></div>
+
+{% endblock %}

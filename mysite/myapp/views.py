@@ -9,14 +9,16 @@ from datetime import datetime
 
 
 
-def index(request):   #ProductListView(ListView):
-    items = Product.objects.all()
-    context = {
-        'items': items
-    }
-    return render(request, "myapp/index.html", context)
+# def index(request):   #ProductListView(ListView):
+#     items = Product.objects.all()
+#     context = {
+#         'items': items
+#     }
+#     return render(request, "myapp/index.html", context)
 
 
+
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 class ProductListView(ListView):
     model = Product
@@ -29,13 +31,9 @@ class ProductListView(ListView):
         queryset = Product.objects.all()
 
         if query:
-            # Используйте Q-объекты для выполнения поиска в нескольких полях модели Product.
             queryset = queryset.filter(Q(name__icontains=query) | Q(description__icontains=query))
 
-        # Отфильтровать только тех продавцов, у которых is_seller=True
         queryset = queryset.filter(seller__is_seller=True)
-        
-        # Указать порядок сортировки
         queryset = queryset.order_by('id')
 
         return queryset
@@ -43,19 +41,32 @@ class ProductListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         
-        # Получить список продавцов
         sellers = CustomUser.objects.filter(is_seller=True)
+        events = Event.objects.all()
+
+        # Для ивентов создаем отдельный объект пагинации
+        paginator = Paginator(events, self.paginate_by)
+        page = self.request.GET.get('page')
+
+        try:
+            events = paginator.page(page)
+        except PageNotAnInteger:
+            events = paginator.page(1)
+        except EmptyPage:
+            events = paginator.page(paginator.num_pages)
 
         context['sellers'] = sellers
+        context['events'] = events
         return context
 
 
-def indexItem(request, my_id):   #ProductDetailView(DetailView):
-    item = Product.objects.get(id=my_id)
-    context = {
-        'item': item
-    }
-    return render(request, "myapp/detail.html", context)
+
+# def indexItem(request, my_id):   #ProductDetailView(DetailView):
+#     item = Product.objects.get(id=my_id)
+#     context = {
+#         'item': item
+#     }
+#     return render(request, "myapp/detail.html", context)
 
 class ProductDetailView(DetailView):
     model = Product

@@ -1,0 +1,14 @@
+{% extends 'myapp/base.html' %}
+
+{% block content %}
+
+<div class="container mx-auto mt-10">
+    <h1 class="text-2xl font-bold mb-5">Редактировать профиль продавца</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">Сохранить изменения</button>
+    </form>
+</div>
+
+{% endblock content %}
