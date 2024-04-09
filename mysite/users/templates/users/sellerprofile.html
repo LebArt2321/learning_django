@@ -105,8 +105,8 @@
     <div class="flex justify-center">
         <div class="w-full max-w-2xl">
             <div class="profile-container">
-                {% if seller.profile.image.url %}
-                <img src="{{ seller.profile.image.url }}" alt="Seller Image" class="profile-image">
+                {% if seller.sellerprofile.image.url %}
+                <img src="{{ seller.sellerprofile.image.url }}" alt="Seller Image" class="profile-image">
                 {% endif %}
                 <h1 class="text-2xl font-bold mb-5">Профиль продавца: {{ seller.user.username }}</h1>
                 {% if seller_profile.seller_description %}
@@ -164,7 +164,7 @@
 </div>
 
 <div class="edit-profile-button" style="text-align: center; margin-top: 20px;">
-    {% if request.user.id == seller_profile.id %}
+    {% if request.user.id == seller.id %}
     <a class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-5"
         href="{% url 'users:edit_seller_profile' user.id %}">
         Редактировать профиль

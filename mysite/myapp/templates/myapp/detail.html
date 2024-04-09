@@ -3,15 +3,46 @@
 
 {% block content %}
 
-<div class="flex p-10 w-full">
+<div class="flex p-10 w-full justify-center">
     <img class="w-1/3 rounded-lg shadow-md" src="{{ item.image.url }}" alt="{{ item.name }}">
     <div class="w-2/3 ml-10 mt-5">
         <h1 class="text-3xl font-semibold">{{ item.name }}</h1>
-        <p class="text-green-500 text-xl mt-2">₽{{ item.price | intcomma }}</p>
+        <p class="text-green-500 text-xl mt-2">{{ item.price | intcomma }} ₽</p>
         <p class="mt-3 text-gray-700">{{ item.description }}</p>
         <p class="mt-3 text-gray-700">Категория: {{ item.category }}</p>
         <p class="mt-3 text-indigo-600"><a href="{% url 'users:sellerprofile' item.seller.id %}">prod. by {{ item.seller }}</a></p>
-        <p class="mt-3 text-gray-600">Contact Number: {{ item.seller.profile.contact_number }}</p>
+        <p class="mt-3 text-gray-600">Contact Number: {{ item.seller.sellerprofile.contact_number }}</p>
+
+        {% if user_profile %}
+            <!-- Рекомендованный размер футболки -->
+            {% if recommended_tshirt_size %}
+                <p class="mt-3 text-gray-700">Рекомендуемый размер футболки: {{ recommended_tshirt_size }}</p>
+            {% endif %}
+        {% endif %}
+
+        {% if user.is_seller %}
+        {% else %}
+        <!-- Добавление товара в избранное -->
+        <form class="mt-3" method="post" action="{% url 'myapp:detail' pk=item.pk %}">
+            {% csrf_token %}
+            {% if item_in_favorites %}
+            <button type="submit" name="remove_from_favorites" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600">Удалить из избранного</button>
+            {% else %}
+            <button type="submit" name="add_to_favorites" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">Добавить в избранное</button>
+            {% endif %}
+        </form>
+
+        <form class="mt-3" method="post" action="{% url 'myapp:add_to_cart' item.pk %}">
+            {% csrf_token %}
+            <select name="size" class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                {% for size in item.sizes.all %}
+                    <option value="{{ size.id }}">{{ size.name }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600">Добавить в корзину</button>
+        </form>
+        {% endif %}
+  
 
         {% if request.user == item.seller %}
             <div class="mt-5 flex space-x-3">
