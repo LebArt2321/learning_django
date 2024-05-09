@@ -1,0 +1,33 @@
+{% extends 'myapp/base.html' %}
+
+{% block content %}
+
+<div class="container mx-auto mt-10">
+    <h1 class="text-3xl font-bold mb-5 text-green-600">Редактировать профиль продавца</h1>
+    <form method="post" enctype="multipart/form-data" class="max-w-md mx-auto bg-white shadow-md rounded px-8 py-8 mb-4">
+        {% csrf_token %}
+        <div class="mb-4">
+            <label class="block text-gray-700 text-md font-bold mb-2" for="id_image">Изображение</label>
+            {{ form.image }}
+        </div>
+
+        <div class="mb-4">
+            <label class="block text-gray-700 text-md font-bold mb-2" for="id_contact_number">Номер контакта</label>
+            {{ form.contact_number }}
+        </div>
+
+        <div class="mb-4">
+            <label class="block text-gray-700 text-md font-bold mb-2" for="id_seller_description">Описание продавца</label>
+            {{ form.seller_description }}
+        </div>
+
+        <div class="mb-4">
+            <label class="block text-gray-700 text-md font-bold mb-2" for="id_background_image">Фоновое изображение</label>
+            {{ form.background_image }}
+        </div>
+
+        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4 focus:outline-none focus:shadow-outline">Сохранить изменения</button>
+    </form>
+</div>
+
+{% endblock content %}
