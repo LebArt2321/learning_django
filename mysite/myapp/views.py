@@ -9,7 +9,7 @@ from datetime import datetime
 from django.urls import reverse
 from django.shortcuts import get_object_or_404
 
-from users.recommendations import recommend_tshirt_size
+from users.recommendations import recommend_tshirt_size, recommend_sweatshirt_size, recommend_pants_size
 
 
 
@@ -107,18 +107,25 @@ class ProductDetailView(DetailView):
                 user_profile = Profile.objects.get(user=self.request.user)
             except Profile.DoesNotExist:
                 user_profile = None
-            # Получение рекомендованного размера футболки
-            if user_profile:
-                recommended_size = recommend_tshirt_size(user_profile)
-                context['recommended_tshirt_size'] = recommended_size
 
-            context['user_profile'] = user_profile
-            # Добавление рекомендованного размера в контекст
-            
-            # Проверка, добавлен ли товар в избранное пользователем
             product = self.get_object()
-            context['item_in_favorites'] = Favorite.objects.filter(user=self.request.user, product=product).exists()
+            recommended_size = None
+            
+            if user_profile:
+                if product.category.name == 'Футболка':
+                    recommended_size = recommend_tshirt_size(user_profile)
+                elif product.category.name == 'Толстовка':
+                    recommended_size = recommend_sweatshirt_size(user_profile)
+                elif product.category.name == 'Штаны':
+                    recommended_size = recommend_pants_size(user_profile)
+            context['recommended_size'] = recommended_size
+            context['user_profile'] = user_profile
+
+            # Проверка, добавлен ли товар в избранное пользователем
+            item_in_favorites = Favorite.objects.filter(user=self.request.user, product=product).exists()
+            context['item_in_favorites'] = item_in_favorites
         return context
+
 
     def post(self, request, *args, **kwargs):
         if request.user.is_authenticated:
