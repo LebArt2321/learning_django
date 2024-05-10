@@ -35,7 +35,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="C:\Users\fifaa\OneDrive\Desktop\diplom\learning_django\venv"
+VIRTUAL_ENV="C:\Users\fifaa\Desktop\diplom\learning_django\venv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"
