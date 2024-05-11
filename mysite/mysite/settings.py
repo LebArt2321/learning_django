@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-^-6a65=7qd^m-8%7sgx@r8ctz87xwe%8_v*rb3!mwszh*mh%!2
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['projectstreet', '10.129.0.13', '127.0.0.1', '51.250.51.45']
 
 
 # Application definition
@@ -89,12 +89,15 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'main',
-        'USER': 'postgres',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'myproject',
+        'USER': 'myprojectuser',
         'PASSWORD': '2321',
-        'HOST': 'localhost', # или IP-адрес сервера PostgreSQL
-        'PORT': '5432', # порт по умолчанию для PostgreSQL
+        'HOST': '51.250.51.45',
+        'PORT': '5432',
+        'OPTIONS': {
+            'client_encoding': 'UTF8',
+        }
     }
 }
 
