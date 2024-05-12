@@ -1,18 +1,32 @@
+version: '3.11'
+
 services:
+  db:
+    image: postgres:14
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: myproject
+      POSTGRES_USER: myprojectuser
+      POSTGRES_PASSWORD: 2321
+    ports:
+      - "5432:5432"
+
   web:
     build: .
-    ports:
-      - "8080:8000"
-    environment:
-      - DJANGO_SETTINGS_MODULE=mysite.settings
-      - SECRET_KEY=django-insecure-^-6a65=7qd^m-8%7sgx@r8ctz87xwe%8_v*rb3!mwszh*mh%!2
-      - DEBUG=True
-      - DATABASE_URL=postgres://postgres:2321@localhost:5432/main
+    command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/app
-      - static_volume:/app/static
-      - media_volume:/app/media
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      DATABASE_HOST: db  # Используйте имя сервиса базы данных как хост в настройках Django
+      DATABASE_NAME: myproject
+      DATABASE_USER: myprojectuser
+      DATABASE_PASSWORD: 2321
+      DATABASE_PORT: 5432
 
 volumes:
-  static_volume:
-  media_volume:
+  postgres_data:
