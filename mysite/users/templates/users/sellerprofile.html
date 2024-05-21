@@ -106,7 +106,7 @@
         <div class="w-full max-w-2xl">
             <div class="profile-container">
                 {% if seller.sellerprofile.image.url %}
-                <img src="{{ seller.sellerprofile.image.url }}" alt="Seller Image" class="profile-image">
+                <img src="{{ seller.sellerprofile.image.url }}" alt="Seller Image" class="profile-image mt-10">
                 {% endif %}
                 <h1 class="text-2xl font-bold mb-5">Профиль продавца: {{ seller.user.username }}</h1>
                 {% if seller_profile.seller_description %}

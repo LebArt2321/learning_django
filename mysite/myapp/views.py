@@ -195,6 +195,7 @@ def add_item(request):
         item = Product(name=name, price=price, description=description, image=image, seller=seller, category=category)
         item.save()
         item.sizes.add(size)  # Добавляем выбранный размер к товару
+        return redirect("/")
 
     return render(request, "myapp/additem.html", {'categories': categories, 'sizes': sizes})
 
@@ -211,6 +212,7 @@ def add_event(request):
         organizer = request.user
         item = Event(name=name, image=image, date=date, organizer=organizer)
         item.save()
+        return redirect("/")
 
     return render(request, "myapp/addevent.html")
 
