@@ -8,6 +8,7 @@ app_name = "myapp"
 urlpatterns = [
     # path('', index, name='index'),
     path('', ProductListView.as_view(), name='index'),
+    
     # path('<int:my_id>/', indexItem, name="detail"),  
     path('<int:pk>/', ProductDetailView.as_view(), name="detail"), 
     path('autocomplete/', autocomplete_search, name='autocomplete'),

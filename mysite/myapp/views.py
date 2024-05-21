@@ -23,11 +23,12 @@ class ProductListView(ListView):
     model = Product
     template_name = 'myapp/index.html'
     context_object_name = 'items'
-    paginate_by = 3
+    paginate_by = 6
 
     def get_queryset(self):
         query = self.request.GET.get('search')
         filters = self.request.GET.get('filters', '')
+        category = self.request.GET.get('category', '')
         filters_list = filters.split(',') if filters else []
 
         queryset = Product.objects.all()
@@ -39,6 +40,9 @@ class ProductListView(ListView):
             for filter in filters_list:
                 queryset = queryset.filter(Q(name__icontains=filter) | Q(description__icontains=filter))
 
+        if category:
+            queryset = queryset.filter(category__name=category)
+
         queryset = queryset.filter(seller__is_seller=True)
         queryset = queryset.order_by('id')
 
@@ -48,6 +52,7 @@ class ProductListView(ListView):
         context = super().get_context_data(**kwargs)
         sellers = CustomUser.objects.filter(is_seller=True)
         events = Event.objects.all()
+        categories = Category.objects.all()
 
         # Для ивентов создаем отдельный объект пагинации
         paginator = Paginator(events, self.paginate_by)
@@ -67,8 +72,10 @@ class ProductListView(ListView):
         context['events'] = events
         context['filters'] = filters
         context['filters_list'] = filters_list
-        return context
+        context['categories'] = categories
+        context['selected_category'] = self.request.GET.get('category', '')
 
+        return context
 
 
 # class ProductDetailView(DetailView):

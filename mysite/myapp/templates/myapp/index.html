@@ -339,7 +339,11 @@
     margin-right: -1px; /* Добавлено для создания отступа между полем ввода и кнопкой */
 }
 
-
+.category-filters {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
 
 .search-button:hover {
     background-color: #333;
@@ -349,12 +353,24 @@
 </style>
 
 <main class="mt-4 mx-auto max-w-7xl px-4 sm:mt-6 sm:px-6 md:mt-8 lg:mt-10 lg:px-8 xl:mt-16">
+    <div class="category-filters">
+        <form action="{% url 'myapp:index' %}" method="GET">
+            <label for="category">Категория:</label>
+            <select name="category" id="category" onchange="this.form.submit()">
+                <option value="">Все категории</option>
+                {% for category in categories %}
+                    <option value="{{ category.name }}" {% if category.name == selected_category %}selected{% endif %}>{{ category.name }}</option>
+                {% endfor %}
+            </select>
+        </form>
+    </div>
+
     <div class="search-container">
-      <form class="search-form" action="{% url 'myapp:index' %}" method="GET">
-          <input type="text" name="search" id="search-input" class="search-input" placeholder="Поиск...">
-          <button type="submit" class="search-button">Поиск</button>
-          <input type="hidden" name="filters" id="filters-input" value="{% if request.GET.filters %}{{ request.GET.filters }}{% endif %}">
-      </form>
+        <form class="search-form" action="{% url 'myapp:index' %}" method="GET">
+            <input type="text" name="search" id="search-input" class="search-input" placeholder="Поиск...">
+            <button type="submit" class="search-button">Поиск</button>
+            <input type="hidden" name="filters" id="filters-input" value="{% if request.GET.filters %}{{ request.GET.filters }}{% endif %}">
+        </form>
     </div>
 
     <div id="selected-filters">
@@ -368,7 +384,7 @@
         {% endif %}
     </div>
 
-
+    
   <div class="my-5 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
     
     {% for seller in sellers %}
@@ -460,25 +476,20 @@
             source: "{% url 'myapp:autocomplete' %}",
             minLength: 2,
             select: function(event, ui) {
-                var filters = $('#filters-input').val().split(',');
-                if (ui.item.value.trim() !== '') {
-                    filters.push(ui.item.value.trim());
-                    $('#filters-input').val(filters.join(','));
-                    $('.search-form').submit();
-                }
+                $('#search-input').val(ui.item.value);
+                $('#filters-input').val(ui.item.value);
+                $('.search-form').submit();
             }
         });
-    
+
         $('.remove-filter').click(function() {
-            var filterToRemove = $(this).data('filter');
-            var filters = $('#filters-input').val().split(',');
-            filters = filters.filter(function(filter) {
-                return filter !== filterToRemove && filter.trim() !== '';
-            });
+            var filter = $(this).data('filter');
+            var filters = $('#filters-input').val().split(',').filter(Boolean);
+            filters = filters.filter(f => f !== filter);
             $('#filters-input').val(filters.join(','));
             $('.search-form').submit();
         });
     });
-    </script>
+</script>
     
     {% endblock content %}
