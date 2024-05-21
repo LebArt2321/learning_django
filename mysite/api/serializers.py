@@ -21,7 +21,8 @@ class SizeSerializer(serializers.ModelSerializer):
 class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['id', 'username', 'email', 'is_seller']
+        fields = '__all__'
+#        fields = ['id', 'username', 'email', 'is_seller']
 
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:

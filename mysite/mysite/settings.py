@@ -25,6 +25,8 @@ SECRET_KEY = 'django-insecure-^-6a65=7qd^m-8%7sgx@r8ctz87xwe%8_v*rb3!mwszh*mh%!2
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+import os
+
 ALLOWED_HOSTS = ['projectstreet', '10.129.0.4', '127.0.0.1', '51.250.51.45', '*', '51.250.54.133']
 
 
@@ -38,10 +40,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
-    
+
     'myapp',
     'users',
-    
+
     'rest_framework',
     'api'
 ]
@@ -80,26 +82,37 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'myproject',
-        'USER': 'myprojectuser',
-        'PASSWORD': '2321',
-        'HOST': '51.250.54.133',
-        'PORT': '5432',
-        'OPTIONS': {
-            'client_encoding': 'UTF8',
-        }
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.postgresql',
+#        'NAME': 'mynewdatabase',
+#        'USER': 'mynewuser',
+#        'PASSWORD': 'mypassword',
+#        'HOST': '51.250.54.133',  # Или другой IP, если база данных находится на другом сервере
+#        'PORT': '5432',
+#    }
+# }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': os.getenv('DATABASE_NAME', 'myproject'),
+#         'USER': os.getenv('DATABASE_USER', 'myprojectuser'),
+#         'PASSWORD': os.getenv('DATABASE_PASSWORD', '2321'),
+#         'HOST': os.getenv('DATABASE_HOST', 'db'),  # Имя сервиса базы данных
+#         'PORT': os.getenv('DATABASE_PORT', '5432'),
+#         'OPTIONS': {
+#             'client_encoding': 'UTF8',
+#         }
+#     }
+# }
 
 
 

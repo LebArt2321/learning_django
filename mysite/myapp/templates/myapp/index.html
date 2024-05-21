@@ -1,10 +1,37 @@
 {% extends "myapp/base.html" %}
 {% load humanize %}
 {% block content %}
-
+<head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+</head>
 <style>
     body {
         background-color: white; /* Белый фон */
+    }
+
+    .ui-menu-item-wrapper {
+        padding: 10px;
+        cursor: pointer;
+    }
+    .ui-menu-item-wrapper:hover {
+        background-color: #f0f0f0;
+    }
+    .filter-tag {
+        display: inline-block;
+        background-color: #333;
+        color: white;
+        border-radius: 15px;
+        padding: 5px 10px;
+        margin: 5px;
+        cursor: pointer;
+        font-size: 0.9em;
+    }
+    .filter-tag .remove-filter {
+        margin-left: 5px;
+        font-weight: bold;
+        cursor: pointer;
     }
 
     .profile-container {
@@ -319,18 +346,27 @@
 }
 
 
-
-    
 </style>
 
 <main class="mt-4 mx-auto max-w-7xl px-4 sm:mt-6 sm:px-6 md:mt-8 lg:mt-10 lg:px-8 xl:mt-16">
- 
-  <div class="search-container">
-    <form class="search-form" action="#">
-        <input type="text" name="search" class="search-input" placeholder="Search...">
-        <button type="submit" class="search-button">Search</button>
-    </form>
-</div>
+    <div class="search-container">
+      <form class="search-form" action="{% url 'myapp:index' %}" method="GET">
+          <input type="text" name="search" id="search-input" class="search-input" placeholder="Поиск...">
+          <button type="submit" class="search-button">Поиск</button>
+          <input type="hidden" name="filters" id="filters-input" value="{% if request.GET.filters %}{{ request.GET.filters }}{% endif %}">
+      </form>
+    </div>
+
+    <div id="selected-filters">
+        {% if filters_list %}
+            {% for filter in filters_list %}
+                <span class="filter-tag">
+                    {{ filter }}
+                    <span class="remove-filter" data-filter="{{ filter }}">&times;</span>
+                </span>
+            {% endfor %}
+        {% endif %}
+    </div>
 
 
   <div class="my-5 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
@@ -353,7 +389,7 @@
       <a href="{% url 'myapp:detail' item.id %}">
         <div class="rounded overflow-hidden shadow-lg p-4 product">
             {% if item.image %}
-            <img src="{{ item.image.url }}" alt="{{ item.name }}" class="w-full h-32 object-cover mb-2">
+            <img src="{{ item.image.url }}" alt="{{ item.name }}" class="w-full h-33 object-cover mb-2">
             {% endif %}
             <div class="product-details">
                 <h3 class="font-bold text-xl mb-2">{{ item.name }}</h3>
@@ -372,7 +408,7 @@
               {% for event in events %}
               <div class="rounded overflow-hidden shadow-lg p-4 event">
                   {% if event.image %}
-                  <img src="{{ event.image.url }}" alt="{{ event.name }}" class="w-full h-32 object-cover mb-2">
+                  <img src="{{ event.image.url }}" alt="{{ event.name }}" class="w-full h-33 object-cover mb-2">
                   {% endif %}
                   <div class="event-details">
                       <h3 class="font-bold text-xl mb-2">{{ event.name }}</h3>
@@ -418,4 +454,31 @@
 
 </main>
 
-{% endblock content %}
+<script>
+    $(function() {
+        $('#search-input').autocomplete({
+            source: "{% url 'myapp:autocomplete' %}",
+            minLength: 2,
+            select: function(event, ui) {
+                var filters = $('#filters-input').val().split(',');
+                if (ui.item.value.trim() !== '') {
+                    filters.push(ui.item.value.trim());
+                    $('#filters-input').val(filters.join(','));
+                    $('.search-form').submit();
+                }
+            }
+        });
+    
+        $('.remove-filter').click(function() {
+            var filterToRemove = $(this).data('filter');
+            var filters = $('#filters-input').val().split(',');
+            filters = filters.filter(function(filter) {
+                return filter !== filterToRemove && filter.trim() !== '';
+            });
+            $('#filters-input').val(filters.join(','));
+            $('.search-form').submit();
+        });
+    });
+    </script>
+    
+    {% endblock content %}

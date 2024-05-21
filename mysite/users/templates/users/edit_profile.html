@@ -2,63 +2,63 @@
 
 {% block content %}
 <div class="container mx-auto p-5">
-    <h1 class="text-3xl font-bold text-center mb-8 text-green-600">Edit Profile</h1>
+    <h1 class="text-3xl font-bold text-center mb-8 text-green-600">Изменить профиль</h1>
     <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         
         <div class="mb-4">
-            <label class="block text-gray-700 text-md font-bold mb-2" for="id_image">Profile Image</label>
+            <label class="block text-gray-700 text-md font-bold mb-2" for="id_image">Изображение профиля</label>
             {{ form.image }}
         </div>
 
         <div class="mb-4">
-            <label class="block text-gray-700 text-md font-bold mb-2" for="id_contact_number">Contact Number</label>
+            <label class="block text-gray-700 text-md font-bold mb-2" for="id_contact_number">Номер телефона</label>
             {{ form.contact_number }}
         </div>
 
         <div class="mb-4">
-            <label class="block text-gray-700 text-md font-bold mb-2" for="id_height">Height</label>
+            <label class="block text-gray-700 text-md font-bold mb-2" for="id_height">Рост</label>
             {{ form.height }}
         </div>
 
         <div class="mb-4">
-            <label class="block text-gray-700 text-md font-bold mb-2" for="id_foot_size">Foot Size</label>
+            <label class="block text-gray-700 text-md font-bold mb-2" for="id_foot_size">Размер ноги</label>
             {{ form.foot_size }}
         </div>
 
         <div class="mb-4">
-            <label class="block text-gray-700 text-md font-bold mb-2" for="id_chest_circumference">Chest Circumference</label>
+            <label class="block text-gray-700 text-md font-bold mb-2" for="id_chest_circumference">Обхват груди</label>
             {{ form.chest_circumference }}
         </div>
 
         <div class="mb-4">
-            <label class="block text-gray-700 text-md font-bold mb-2" for="id_waist_circumference">Waist Circumference</label>
+            <label class="block text-gray-700 text-md font-bold mb-2" for="id_waist_circumference">Обхват талии</label>
             {{ form.waist_circumference }}
         </div>
 
         <div class="mb-4">
-            <label class="block text-gray-700 text-md font-bold mb-2" for="id_hip_girth">Hip Girth</label>
+            <label class="block text-gray-700 text-md font-bold mb-2" for="id_hip_girth">Обхват бедер</label>
             {{ form.hip_girth }}
         </div>
 
         <div class="mb-4">
-            <label class="block text-gray-700 text-md font-bold mb-2" for="id_shoulder_width">Shoulder Width</label>
+            <label class="block text-gray-700 text-md font-bold mb-2" for="id_shoulder_width">Ширина плеч</label>
             {{ form.shoulder_width }}
         </div>
 
         <div class="mb-4">
-            <label class="block text-gray-700 text-md font-bold mb-2" for="id_length_shoulder">Length Shoulder</label>
+            <label class="block text-gray-700 text-md font-bold mb-2" for="id_length_shoulder">Длина до плеча</label>
             {{ form.length_shoulder }}
         </div>
 
         <div class="mb-4">
-            <label class="block text-gray-700 text-md font-bold mb-2" for="id_pants_length">Pants Length</label>
+            <label class="block text-gray-700 text-md font-bold mb-2" for="id_pants_length">Длина брюк</label>
             {{ form.pants_length }}
         </div>
 
         <div class="text-center">
             <button class="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
-                Save Profile
+                Сохранить изменения
             </button>
         </div>
     </form>

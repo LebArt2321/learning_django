@@ -3,7 +3,7 @@
 
 {% block content %}
     <div class="container mx-auto px-4">
-        <h1 class="text-3xl font-bold mb-8 text-green-600">Cart</h1>
+        <h1 class="text-3xl font-bold mb-8 text-green-600">Корзина</h1>
         <ul>
             {% for item in cart.items.all %}
                 <li class="flex justify-between items-center border-b border-gray-200 py-4 px-6">
@@ -11,7 +11,7 @@
                         <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="w-16 h-16 object-cover mr-6 rounded-md shadow-md">
                         <div>
                             <h2 class="text-lg font-semibold">{{ item.product.name }}</h2>
-                            <p class="text-gray-600">Size: {{ item.size }}</p>
+                            <p class="text-gray-600">Размер: {{ item.size }}</p>
                         </div>
                     </a>
                     <div class="flex items-center">
@@ -22,7 +22,7 @@
                                 <button type="submit" class="text-red-500 hover:text-red-700">-</button>
                             </form>
                         </div>
-                        <p class="mx-2">Quantity: {{ item.quantity }}</p>
+                        <p class="mx-2">Количество: {{ item.quantity }}</p>
                         <div class="mx-4">
 
 
@@ -37,13 +37,13 @@
                         <div class="mx-4">
                             <form action="{% url 'myapp:remove_from_cart' item.id %}" method="post">
                                 {% csrf_token %}
-                                <button type="submit" class="text-red-500 hover:text-red-700">Remove all</button>
+                                <button type="submit" class="text-red-500 hover:text-red-700">Удалить все</button>
                             </form>
                         </div>
                     </div>
                 </li>
             {% endfor %}
         </ul>
-        <p class="mt-8 text-xl font-semibold">Total: {{ cart.total | intcomma }} ₽</p>
+        <p class="mt-8 text-xl font-semibold">Итого: {{ cart.total | intcomma }} ₽</p>
     </div>
 {% endblock content %}

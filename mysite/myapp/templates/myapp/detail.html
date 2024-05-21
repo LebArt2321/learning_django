@@ -11,7 +11,6 @@
         <p class="mt-3 text-gray-700">{{ item.description }}</p>
         <p class="mt-3 text-gray-700">Категория: {{ item.category }}</p>
         <p class="mt-3 text-indigo-600"><a href="{% url 'users:sellerprofile' item.seller.id %}">prod. by {{ item.seller }}</a></p>
-        <p class="mt-3 text-gray-600">Contact Number: {{ item.seller.sellerprofile.contact_number }}</p>
 
         {% if user_profile %}
             <!-- Рекомендованный размер футболки -->
@@ -46,8 +45,8 @@
 
         {% if request.user == item.seller %}
             <div class="mt-5 flex space-x-3">
-                <button class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"><a href="{% url 'myapp:update_item' item.id %}">Update Item</a></button>
-                <button class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"><a href="{% url 'myapp:delete_item' item.id %}">Delete Item</a></button>
+                <button class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"><a href="{% url 'myapp:update_item' item.id %}">Редактировать</a></button>
+                <button class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"><a href="{% url 'myapp:delete_item' item.id %}">Удалить товар</a></button>
             </div>
         {% endif %}
     </div>

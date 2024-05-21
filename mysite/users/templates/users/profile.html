@@ -60,6 +60,61 @@
         padding: 10px 20px; /* Добавленный стиль для увеличения отступов кнопки */
         text-decoration: none; /* Убрать подчеркивание ссылки */
     }
+    .products-container,
+    .events-container {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .product,
+    .event {
+        flex: 0 0 calc(33.33% - 20px);
+        margin-bottom: 20px;
+        text-align: center;
+        padding: 10px; /* Добавленные отступы между товарами */
+        box-sizing: border-box; /* Учтем отступы в общей ширине элемента */
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    .product:hover,
+    .event:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .product img,
+    .event img {
+        max-width: 100%;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+    }
+
+    .product-details,
+    .event-details {
+        padding: 15px;
+    }
+
+    .section-title {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .edit-profile-button {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .edit-profile-button a {
+        color: black;
+        border: 2px solid black; /* Добавленный стиль для видимых границ */
+        padding: 10px 20px; /* Добавленный стиль для увеличения отступов кнопки */
+        text-decoration: none; /* Убрать подчеркивание ссылки */
+    }
 </style>
 
 
@@ -74,28 +129,29 @@
                 <div class="bg-gray-200 rounded-full w-32 h-32 mx-auto mb-4"></div>
                 {% endif %}
                 <h1 class="text-2xl font-bold mb-5">Покупатель: {{ user.username }}</h1>
-                <p class="text-gray-700">Contact Number: {{ user.profile.contact_number }}</p>
-                <p class="text-gray-700">Height: {{ user.profile.height }} cm</p>
-                <p class="text-gray-700">Foot Size: {{ user.profile.foot_size }}</p>
-                <p class="text-gray-700">Chest Circumference: {{ user.profile.chest_circumference }}</p>
-                <p class="text-gray-700">Waist Circumference: {{ user.profile.waist_circumference }}</p>
-                <p class="text-gray-700">Hip Girth: {{ user.profile.hip_girth }}</p>
-                <p class="text-gray-700">Shoulder Width: {{ user.profile.shoulder_width }}</p>
-                <p class="text-gray-700">Length Shoulder: {{ user.profile.length_shoulder }}</p>
-                <p class="text-gray-700">Pants Length: {{ user.profile.pants_length }}</p>
+                <p class="text-gray-700">Номер телефона: {{ user.profile.contact_number }}</p>
+                <p class="text-gray-700">Рост: {{ user.profile.height }} см.</p>
+                <p class="text-gray-700">Размер ноги: {{ user.profile.foot_size }}</p>
+                <p class="text-gray-700">Обхват груди: {{ user.profile.chest_circumference }}</p>
+                <p class="text-gray-700">Обхват талии: {{ user.profile.waist_circumference }}</p>
+                <p class="text-gray-700">Обхват бедер: {{ user.profile.hip_girth }}</p>
+                <p class="text-gray-700">Ширина плеч: {{ user.profile.shoulder_width }}</p>
+                <p class="text-gray-700">Длина до плеча: {{ user.profile.length_shoulder }}</p>
+                <p class="text-gray-700">Длина брюк: {{ user.profile.pants_length }}</p>
             </div>
             <div class="favorites-container">
-                <h2 class="font-bold text-lg mt-4 mb-2">Favorites</h2>
-                <div class="flex flex-col items-center">
+                <h2 class="font-bold text-lg mb-4 section-title">Избранное:</h2>
+                
+                <div class="products-container">
                     {% for favorite in user.favorite_set.all %}
-                    <a href="{% url 'myapp:detail' favorite.product.id %}" class="w-64">
-                        <div class="favorite-item bg-white shadow-md rounded-lg p-4">
-                            <img src="{{ favorite.product.image.url }}" alt="{{ favorite.product.name }}" class="w-20 h-20 mx-auto mb-2">
+                    <a href="{% url 'myapp:detail' favorite.product.id %}" >
+                        <div class="rounded overflow-hidden shadow-lg p-4 product">                           
+                            <img src="{{ favorite.product.image.url }}" alt="{{ favorite.product.name }}" class="w-full h-32 object-cover mb-2">
                             <p>{{ favorite.product.name }}</p>
                         </div>
                     </a>
                     {% empty %}
-                    <p class="text-gray-700">No favorites yet.</p>
+                    <p class="text-gray-700">Избранные товары еще не были добавлены</p>
                     {% endfor %}
                 </div>
             </div>
@@ -104,7 +160,7 @@
 </div>
 
 <div class="edit-profile-button" style="text-align: center; margin-top: 20px;">
-    <a class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-5" href="{% url 'users:edit_profile' %}">Edit Profile</a>
+    <a class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-5" href="{% url 'users:edit_profile' %}">Редактировать профиль</a>
 </div>
 
 {% endblock %}

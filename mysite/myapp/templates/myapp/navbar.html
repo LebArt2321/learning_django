@@ -9,24 +9,24 @@
                     </a>
                 </div>
                 <div class="items-center flex space-x-1">
-                    <a href="{% url 'myapp:index' %}" class="py-4 px-2 text-gray-500 font-semibold {% if request.path == '/' or request.path == '/home/' %}border-b-4 border-black{% endif %}">Home</a>
+                    <a href="{% url 'myapp:index' %}" class="py-4 px-2 text-gray-500 font-semibold {% if request.path == '/' or request.path == '/home/' %}border-b-4 border-black{% endif %}">Главная</a>
                     
                     {% if user.is_authenticated %}
                         {% if user.is_seller %}
-                            <a href="{% url 'myapp:add_item' %}" class="py-4 px-2 text-gray-500 font-semibold {% if '/additem/' in request.path %}border-b-4 border-black{% endif %}">Add Item</a>
-                            <a href="{% url 'myapp:add_event' %}" class="py-4 px-2 text-gray-500 font-semibold {% if '/addevent/' in request.path %}border-b-4 border-black{% endif %}">Add Event</a>
+                            <a href="{% url 'myapp:add_item' %}" class="py-4 px-2 text-gray-500 font-semibold {% if '/additem/' in request.path %}border-b-4 border-black{% endif %}">Добавить товар</a>
+                            <a href="{% url 'myapp:add_event' %}" class="py-4 px-2 text-gray-500 font-semibold {% if '/addevent/' in request.path %}border-b-4 border-black{% endif %}">Добавить ивент</a>
                             <!-- Проверяем, является ли пользователь продавцом -->
-                            <a href="{% url 'users:sellerprofile' user.id %}" class="py-4 px-2 text-gray-500 font-semibold {% if '/users/sellerprofile/' in request.path %}border-b-4 border-black{% endif %}">Seller Profile</a>
+                            <a href="{% url 'users:sellerprofile' user.id %}" class="py-4 px-2 text-gray-500 font-semibold {% if '/users/sellerprofile/' in request.path %}border-b-4 border-black{% endif %}">Профиль продавца</a>
                         {% else %}
                             <!-- Если пользователь не продавец, выводим ссылку на его профиль -->
-                            <a class="py-4 px-2 text-gray-500 font-semibold {% if '/users/profile/' in request.path %}border-b-4 border-black{% endif %}" href='{% url 'users:profile' %}'>Profile</a>
-                            <a class="py-4 px-2 text-gray-500 font-semibold {% if '/cart/' in request.path %}border-b-4 border-black{% endif %}" href='{% url 'myapp:cart' %}'>Cart</a>
+                            <a class="py-4 px-2 text-gray-500 font-semibold {% if '/users/profile/' in request.path %}border-b-4 border-black{% endif %}" href='{% url 'users:profile' %}'>Профиль</a>
+                            <a class="py-4 px-2 text-gray-500 font-semibold {% if '/cart/' in request.path %}border-b-4 border-black{% endif %}" href='{% url 'myapp:cart' %}'>Корзина</a>
                         {% endif %}
                         <!-- Выводим ссылку на выход в обоих случаях -->
-                        <a class="py-4 px-2 text-gray-500 font-semibold {% if '/users/logout/' in request.path %}border-b-4 border-black{% endif %}" href='{% url 'users:logout' %}'>Logout</a>
+                        <a class="py-4 px-2 text-gray-500 font-semibold {% if '/users/logout/' in request.path %}border-b-4 border-black{% endif %}" href='{% url 'users:logout' %}'>Выход</a>
                     {% else %}
                         <!-- Если пользователь не аутентифицирован, выводим ссылку на вход -->
-                        <a class="py-4 px-2 text-gray-500 font-semibold {% if '/users/login/' in request.path %}border-b-4 border-black{% endif %}" href='{% url 'users:login' %}'>Login</a>
+                        <a class="py-4 px-2 text-gray-500 font-semibold {% if '/users/login/' in request.path %}border-b-4 border-black{% endif %}" href='{% url 'users:login' %}'>Вход</a>
                     {% endif %}
                 </div>
             </div>

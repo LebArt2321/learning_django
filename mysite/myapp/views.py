@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, HttpResponseForbidden
+from django.http import HttpResponse, HttpResponseForbidden, JsonResponse
 from .models import Product, Category, Cart, CartItem, Size
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DetailView
@@ -8,12 +8,16 @@ from users.models import CustomUser, Event, Favorite, SellerProfile, Profile
 from datetime import datetime
 from django.urls import reverse
 from django.shortcuts import get_object_or_404
-
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from users.recommendations import recommend_tshirt_size, recommend_sweatshirt_size, recommend_pants_size
 
-
-
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+def autocomplete_search(request):
+    query = request.GET.get('term', '')
+    product_results = Product.objects.filter(Q(name__icontains=query) | Q(description__icontains=query)).values_list('name', flat=True)
+    event_results = Event.objects.filter(name__icontains=query).values_list('name', flat=True)
+    
+    results = list(product_results) + list(event_results)
+    return JsonResponse(results, safe=False)
 
 class ProductListView(ListView):
     model = Product
@@ -23,10 +27,17 @@ class ProductListView(ListView):
 
     def get_queryset(self):
         query = self.request.GET.get('search')
+        filters = self.request.GET.get('filters', '')
+        filters_list = filters.split(',') if filters else []
+
         queryset = Product.objects.all()
 
         if query:
             queryset = queryset.filter(Q(name__icontains=query) | Q(description__icontains=query))
+
+        if filters_list:
+            for filter in filters_list:
+                queryset = queryset.filter(Q(name__icontains=filter) | Q(description__icontains=filter))
 
         queryset = queryset.filter(seller__is_seller=True)
         queryset = queryset.order_by('id')
@@ -35,7 +46,6 @@ class ProductListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        
         sellers = CustomUser.objects.filter(is_seller=True)
         events = Event.objects.all()
 
@@ -50,8 +60,13 @@ class ProductListView(ListView):
         except EmptyPage:
             events = paginator.page(paginator.num_pages)
 
+        filters = self.request.GET.get('filters', '')
+        filters_list = [f for f in filters.split(',') if f]
+
         context['sellers'] = sellers
         context['events'] = events
+        context['filters'] = filters
+        context['filters_list'] = filters_list
         return context
 
 
@@ -112,11 +127,11 @@ class ProductDetailView(DetailView):
             recommended_size = None
             
             if user_profile:
-                if product.category.name == 'Футболка':
+                if product.category.name == 'Футболка' and user_profile.height and user_profile.chest_circumference and user_profile.waist_circumference:
                     recommended_size = recommend_tshirt_size(user_profile)
-                elif product.category.name == 'Толстовка':
+                elif product.category.name == 'Толстовка' and user_profile.chest_circumference and user_profile.waist_circumference and user_profile.hip_girth and user_profile.shoulder_width and user_profile.height:
                     recommended_size = recommend_sweatshirt_size(user_profile)
-                elif product.category.name == 'Штаны':
+                elif product.category.name == 'Штаны' and user_profile.waist_circumference and user_profile.hip_girth and user_profile.pants_length:
                     recommended_size = recommend_pants_size(user_profile)
             context['recommended_size'] = recommended_size
             context['user_profile'] = user_profile

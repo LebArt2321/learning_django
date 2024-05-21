@@ -1,5 +1,5 @@
 {% extends 'myapp/base.html' %}
-
+{% load humanize %}
 {% block content %}
 <style>
     body {
@@ -132,7 +132,7 @@
                         {% endif %}
                         <div class="product-details">
                             <h3 class="font-bold text-xl mb-2">{{ product.name }}</h3>
-                            <p class="text-gray-700">${{ product.price }}</p>
+                            <p class="text-gray-700">{{ product.price | intcomma }} ₽</p>
                         </a>
                         </div>
                     
