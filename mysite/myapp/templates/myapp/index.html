@@ -425,18 +425,16 @@
             </div>
         </form>
     </div>
-    
-    
-    
+      
 
     <div class="search-container">
-        <form class="search-form" action="{% url 'myapp:index' %}" method="GET">
+        <form class="search-form" action="{% url 'myapp:index' %}" method="GET" id="search-form">
             <input type="text" name="search" id="search-input" class="search-input" placeholder="Поиск...">
             <button type="submit" class="search-button">Поиск</button>
             <input type="hidden" name="filters" id="filters-input" value="{% if request.GET.filters %}{{ request.GET.filters }}{% endif %}">
         </form>
     </div>
-
+    
     <div id="selected-filters">
         {% if filters_list %}
             {% for filter in filters_list %}
@@ -447,6 +445,7 @@
             {% endfor %}
         {% endif %}
     </div>
+    
 
     
   <div class="my-5 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
@@ -551,7 +550,14 @@
             var filters = $('#filters-input').val().split(',').filter(Boolean);
             filters = filters.filter(f => f !== filter);
             $('#filters-input').val(filters.join(','));
-            $('.search-form').submit();
+            $('#search-form').submit();
+        });
+
+        $('.search-form').submit(function(event) {
+            var searchValue = $('#search-input').val();
+            if (searchValue) {
+                $('#filters-input').val(searchValue);
+            }
         });
     });
 </script>

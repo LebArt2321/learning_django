@@ -26,7 +26,7 @@ class ProductListView(ListView):
     paginate_by = 6
 
     def get_queryset(self):
-        query = self.request.GET.get('search')
+        query = self.request.GET.get('search', '')
         filters = self.request.GET.get('filters', '')
         categories = self.request.GET.getlist('category')
         filters_list = filters.split(',') if filters else []
@@ -35,6 +35,7 @@ class ProductListView(ListView):
 
         if query:
             queryset = queryset.filter(Q(name__icontains=query) | Q(description__icontains=query))
+            filters_list = [query]  # Сбросить предыдущие фильтры и оставить только текущий поисковый запрос
 
         if filters_list:
             for filter in filters_list:
@@ -54,7 +55,6 @@ class ProductListView(ListView):
         events = Event.objects.all()
         categories = Category.objects.all()
 
-        # Для ивентов создаем отдельный объект пагинации
         paginator = Paginator(events, self.paginate_by)
         page = self.request.GET.get('page')
 
@@ -78,6 +78,7 @@ class ProductListView(ListView):
         context['selected_categories'] = selected_categories
 
         return context
+
 
 
 class ProductDetailView(DetailView):
