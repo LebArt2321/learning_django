@@ -339,11 +339,66 @@
     margin-right: -1px; /* Добавлено для создания отступа между полем ввода и кнопкой */
 }
 
-.category-filters {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
-}
+.centered-form {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .form-row {
+        display: flex;
+        align-items: center;
+        gap: 10px; /* Отступы между элементами */
+    }
+
+    .category-label {
+        font-weight: bold;
+        margin-right: 10px;
+        padding: 5px 10px;
+        background-color: #f0f0f0;
+        border-radius: 4px;
+    }
+
+    .checkbox-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px; /* Отступы между чекбоксами */
+    }
+
+    .checkbox-label {
+        display: flex;
+        align-items: center;
+        padding: 5px;
+        border: 1px solid #ccc; /* Добавляем границу для чекбоксов */
+        border-radius: 4px;
+        background-color: #f9f9f9;
+    }
+
+    .checkbox-label input {
+        margin-right: 5px; /* Отступ между чекбоксом и текстом */
+        accent-color: black; /* Изменение цвета галочек */
+    }
+
+    .filter-button {
+        margin-top: 0px;
+        padding: 5px 10px;
+        background-color: #000; /* Черный цвет кнопки */
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .filter-button:hover {
+        background-color: #333; /* Темно-серый цвет при наведении */
+    }
+
+    .category-filters {
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: center;
+    }
 
 .search-button:hover {
     background-color: #333;
@@ -354,16 +409,25 @@
 
 <main class="mt-4 mx-auto max-w-7xl px-4 sm:mt-6 sm:px-6 md:mt-8 lg:mt-10 lg:px-8 xl:mt-16">
     <div class="category-filters">
-        <form action="{% url 'myapp:index' %}" method="GET">
-            <label for="category">Категория:</label>
-            <select name="category" id="category" onchange="this.form.submit()">
-                <option value="">Все категории</option>
-                {% for category in categories %}
-                    <option value="{{ category.name }}" {% if category.name == selected_category %}selected{% endif %}>{{ category.name }}</option>
-                {% endfor %}
-            </select>
+        <form action="{% url 'myapp:index' %}" method="GET" class="centered-form">
+            <div class="form-row">
+                <label class="category-label">Категории:</label>
+                <div class="checkbox-group">
+                    {% for category in categories %}
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="category" value="{{ category.name }}"
+                            {% if category.name in selected_categories %}checked{% endif %}>
+                            {{ category.name }}
+                        </label>
+                    {% endfor %}
+                </div>
+                <button type="submit" class="filter-button">Фильтровать</button>
+            </div>
         </form>
     </div>
+    
+    
+    
 
     <div class="search-container">
         <form class="search-form" action="{% url 'myapp:index' %}" method="GET">

@@ -28,7 +28,7 @@ class ProductListView(ListView):
     def get_queryset(self):
         query = self.request.GET.get('search')
         filters = self.request.GET.get('filters', '')
-        category = self.request.GET.get('category', '')
+        categories = self.request.GET.getlist('category')
         filters_list = filters.split(',') if filters else []
 
         queryset = Product.objects.all()
@@ -40,8 +40,8 @@ class ProductListView(ListView):
             for filter in filters_list:
                 queryset = queryset.filter(Q(name__icontains=filter) | Q(description__icontains=filter))
 
-        if category:
-            queryset = queryset.filter(category__name=category)
+        if categories:
+            queryset = queryset.filter(category__name__in=categories)
 
         queryset = queryset.filter(seller__is_seller=True)
         queryset = queryset.order_by('id')
@@ -68,53 +68,17 @@ class ProductListView(ListView):
         filters = self.request.GET.get('filters', '')
         filters_list = [f for f in filters.split(',') if f]
 
+        selected_categories = self.request.GET.getlist('category')
+
         context['sellers'] = sellers
         context['events'] = events
         context['filters'] = filters
         context['filters_list'] = filters_list
         context['categories'] = categories
-        context['selected_category'] = self.request.GET.get('category', '')
+        context['selected_categories'] = selected_categories
 
         return context
 
-
-# class ProductDetailView(DetailView):
-#     model = Product
-#     template_name = 'myapp/detail.html'
-#     context_object_name = 'item'
-
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         if self.request.user.is_authenticated:
-#             product = self.get_object()
-#             context['item_in_favorites'] = Favorite.objects.filter(user=self.request.user, product=product).exists()
-#         return context
-
-#     def post(self, request, *args, **kwargs):
-#         if request.user.is_authenticated:
-#             product_id = self.kwargs['pk']
-#             user = request.user
-#             product = self.get_object()
-#             if 'add_to_favorites' in request.POST:
-#                 favorite, created = Favorite.objects.get_or_create(user=user, product=product)
-#                 if created:
-#                     # Товар успешно добавлен в избранное
-#                     return redirect(reverse('myapp:detail', kwargs={'pk': product_id}))
-#                 else:
-#                     # Товар уже находится в избранном
-#                     return redirect(reverse('myapp:detail', kwargs={'pk': product_id}))
-#             elif 'remove_from_favorites' in request.POST:
-#                 favorite = Favorite.objects.filter(user=user, product=product).first()
-#                 if favorite:
-#                     favorite.delete()
-#                     # Товар успешно удален из избранного
-#                     return redirect(reverse('myapp:detail', kwargs={'pk': product_id}))
-#                 else:
-#                     # Товар не найден в избранном
-#                     return redirect(reverse('myapp:detail', kwargs={'pk': product_id}))
-#         else:
-#             # Если пользователь не аутентифицирован, перенаправьте его на страницу входа или куда-то еще
-#             return redirect('users:login')  # Замените 'login' на нужный вам URL
 
 class ProductDetailView(DetailView):
     model = Product
