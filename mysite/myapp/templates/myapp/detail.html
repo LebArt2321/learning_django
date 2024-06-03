@@ -31,17 +31,16 @@
             {% endif %}
         </form>
 
-        <form class="mt-3" method="post" action="{% url 'myapp:add_to_cart' item.pk %}">
+        <form class="mt-3" method="post" action="{% url 'myapp:add_to_cart' product_size_id=0 %}" id="add-to-cart-form">
             {% csrf_token %}
-            <select name="size" class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                {% for size in item.sizes.all %}
-                    <option value="{{ size.id }}">{{ size.name }}</option>
+            <select name="product_size_id" class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" id="product-size-select">
+                {% for product_size in item.product_sizes.all %}
+                    <option value="{{ product_size.id }}">{{ product_size.size.name }}</option>
                 {% endfor %}
             </select>
-            <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600">Добавить в корзину</button>
+            <button type="button" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600" onclick="submitForm()">Добавить в корзину</button>
         </form>
         {% endif %}
-  
 
         {% if request.user == item.seller %}
             <div class="mt-5 flex space-x-3">
@@ -51,5 +50,14 @@
         {% endif %}
     </div>
 </div>
+
+<script>
+function submitForm() {
+    const select = document.getElementById('product-size-select');
+    const form = document.getElementById('add-to-cart-form');
+    form.action = `{% url 'myapp:add_to_cart' product_size_id=0 %}`.replace('0', select.value);
+    form.submit();
+}
+</script>
 
 {% endblock content %}

@@ -7,11 +7,11 @@
         <ul>
             {% for item in cart.items.all %}
                 <li class="flex justify-between items-center border-b border-gray-200 py-4 px-6">
-                    <a href="{% url 'myapp:detail' item.product.id %}" class="flex items-center">
-                        <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="w-16 h-16 object-cover mr-6 rounded-md shadow-md">
+                    <a href="{% url 'myapp:detail' item.product_size.product.id %}" class="flex items-center">
+                        <img src="{{ item.product_size.product.image.url }}" alt="{{ item.product_size.product.name }}" class="w-16 h-16 object-cover mr-6 rounded-md shadow-md">
                         <div>
-                            <h2 class="text-lg font-semibold">{{ item.product.name }}</h2>
-                            <p class="text-gray-600">Размер: {{ item.size }}</p>
+                            <h2 class="text-lg font-semibold">{{ item.product_size.product.name }}</h2>
+                            <p class="text-gray-600">Размер: {{ item.product_size.size.name }}</p>
                         </div>
                     </a>
                     <div class="flex items-center">
@@ -24,15 +24,10 @@
                         </div>
                         <p class="mx-2">Количество: {{ item.quantity }}</p>
                         <div class="mx-4">
-
-
-                            <form action="{% url 'myapp:add_to_cart' item.product.id %}" method="post">
+                            <form action="{% url 'myapp:add_to_cart' product_size_id=item.product_size.id %}" method="post">
                                 {% csrf_token %}
-                                <input type="hidden" name="size" value="{{ item.size.id }}">
                                 <button type="submit" class="text-green-500 hover:text-green-700">+</button>
-                            </form>                            
-                            
-                            
+                            </form>
                         </div>
                         <div class="mx-4">
                             <form action="{% url 'myapp:remove_from_cart' item.id %}" method="post">

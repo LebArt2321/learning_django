@@ -36,6 +36,7 @@ class Event(models.Model):
     name = models.CharField(max_length=255)
     image = models.ImageField(blank=True, upload_to='images')
     date = models.DateField()
+    description = models.CharField(max_length=2000, default='')
     organizer = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='organized_events')
 
     def __str__(self):

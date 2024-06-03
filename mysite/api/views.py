@@ -1,8 +1,8 @@
 # api/views.py
 from rest_framework import viewsets
-from .serializers import ProductSerializer, CategorySerializer, SizeSerializer
+from .serializers import ProductSerializer, CategorySerializer, SizeSerializer, ProductSizeSerializer
 from .serializers import CustomUserSerializer, ProfileSerializer, SellerProfileSerializer, EventSerializer, FavoriteSerializer
-from myapp.models import Product, Category, Size
+from myapp.models import Product, Category, Size, ProductSize
 from users.models import CustomUser, Profile, SellerProfile, Event, Favorite
 
 class ProductViewSet(viewsets.ModelViewSet):
@@ -16,6 +16,10 @@ class CategoryViewSet(viewsets.ModelViewSet):
 class SizeViewSet(viewsets.ModelViewSet):
     queryset = Size.objects.all()
     serializer_class = SizeSerializer
+    
+class ProductSizeViewSet(viewsets.ModelViewSet):
+    queryset = ProductSize.objects.all()
+    serializer_class = ProductSizeSerializer
 
 class CustomUserViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.all()

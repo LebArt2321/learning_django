@@ -1,6 +1,6 @@
 # api/serializers.py
 from rest_framework import serializers
-from myapp.models import Product, Category, Size
+from myapp.models import Product, Category, Size, ProductSize
 from users.models import CustomUser, Profile, SellerProfile, Event, Favorite
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -16,6 +16,11 @@ class CategorySerializer(serializers.ModelSerializer):
 class SizeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Size
+        fields = '__all__'
+        
+class ProductSizeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductSize
         fields = '__all__'
 
 class CustomUserSerializer(serializers.ModelSerializer):

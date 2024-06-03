@@ -20,21 +20,25 @@ class Product(models.Model):
     description = models.CharField(max_length=2000)
     image = models.ImageField(blank=True, upload_to='images')
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    quantity_available = models.PositiveIntegerField(default=0)  # Количество товаров на складе
-    sizes = models.ManyToManyField(Size)  # Размеры товара
 
     def __str__(self):
         return self.name
-    
+
+class ProductSize(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_sizes')
+    size = models.ForeignKey(Size, on_delete=models.CASCADE)
+    quantity_available = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return f'{self.product.name} - {self.size.name}'
 
 class CartItem(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product_size = models.ForeignKey(ProductSize, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
-    size = models.ForeignKey(Size, on_delete=models.CASCADE)  # Размер товара
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     def subtotal(self):
-        return self.product.price * self.quantity
+        return self.product_size.product.price * self.quantity
 
 class Cart(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)

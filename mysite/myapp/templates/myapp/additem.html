@@ -34,6 +34,10 @@
                 {% endfor %}
             </select>
 
+            <label class="block text-gray-700 text-md font-bold mb-2" for="quantity">Количество товара</label>
+            <input class="shadow appearance-none border rounded py-2 px-3 text-gray-700 mb-3 w-full focus:outline-none focus:shadow-outline" type="number"
+                placeholder="Количество товара" name="quantity" id="quantity" min="0">
+
             <input class="block mt-4" type="file" accept="image/*" name="upload" id="upload">
 
             <button class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4" type="submit" name="Add Item" value="Add Item">Добавить товар</button>
