@@ -48,3 +48,24 @@ class FavoriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Favorite
         fields = '__all__'
+        
+# api/serializers.py
+from rest_framework import serializers
+from users.models import CustomUser
+
+class RegisterSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+
+    class Meta:
+        model = CustomUser
+        fields = ('username', 'email', 'password', 'is_seller')
+
+    def create(self, validated_data):
+        user = CustomUser.objects.create_user(
+            username=validated_data['username'],
+            email=validated_data['email'],
+            password=validated_data['password'],
+            is_seller=validated_data['is_seller']
+        )
+        return user
+
