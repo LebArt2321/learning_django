@@ -164,16 +164,10 @@
 </div>
 
 
-
-<div class="edit-profile-button" style="text-align: center; margin-top: 20px;">
+<div style="text-align: center">
     {% if request.user.id == seller.id %}
-    <a class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-5"
-        href="{% url 'users:edit_seller_profile' user.id %}">
-        Редактировать профиль
-    </a>
+    <button class="mt-8 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700"><a href="{% url 'users:edit_seller_profile' user.id %}">Редактировать профиль</a></button>
     {% endif %}
 </div>
-
 <div style="text-align: center; margin-top: 35px;"></div>
-
 {% endblock %}

@@ -65,7 +65,7 @@ def edit_profile(request):
 
     return render(request, 'users/edit_profile.html', {'form': form})
 
-@login_required
+
 def seller_profile(request, user_id=None):
     user = request.user
     if user_id is None:

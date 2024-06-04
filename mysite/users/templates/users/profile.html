@@ -117,12 +117,11 @@
     }
 </style>
 
-
 <div class="bg-blur"></div>
 <div class="container mx-auto mt-10">
     <div class="flex justify-center">
         <div class="w-full max-w-2xl">
-            <div class="profile-container">
+            <div class="profile-container mt-8">
                 {% if user.profile.image %}
                 <img src="{{ user.profile.image.url }}" alt="Profile Image" class="profile-image mt-10">
                 {% else %}
@@ -159,8 +158,14 @@
     </div>
 </div>
 
-<div class="edit-profile-button" style="text-align: center; margin-top: 20px;">
-    <a class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-5" href="{% url 'users:edit_profile' %}">Редактировать профиль</a>
+
+<div style="text-align: center">
+    <button class="mt-8 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700"><a href="{% url 'users:edit_profile' %}">Редактировать профиль</a></button>
 </div>
+
+<div style="text-align: center">
+    <button class="mt-8 bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-700"><a href="{% url 'myapp:order_history' %}">История заказов</a></button>
+</div>
+<div style="text-align: center; margin-top: 35px;"></div>
 
 {% endblock %}

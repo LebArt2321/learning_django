@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.conf import settings
-from myapp.models import Product
+from myapp.models import Product, ProductSize
 
 class CustomUser(AbstractUser):
     is_seller = models.BooleanField(default=False)
@@ -16,7 +16,7 @@ class Profile(models.Model):
     waist_circumference = models.IntegerField(blank=True, null=True) # обхват талии
     hip_girth = models.IntegerField(blank=True, null=True) # обхват бедер
     shoulder_width = models.IntegerField(blank=True, null=True) # ширина плеч
-    length_shoulder = models.IntegerField(blank=True, null=True) # длина рукова от плеча
+    length_shoulder = models.IntegerField(blank=True, null=True) # длина рукава от плеча
     pants_length = models.IntegerField(blank=True, null=True) # длина штанов
 
     def __str__(self):
@@ -51,3 +51,4 @@ class Favorite(models.Model):
 
     def __str__(self):
         return f"{self.user.username}'s favorite {self.product.name}"
+

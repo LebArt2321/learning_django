@@ -1,0 +1,35 @@
+{% extends 'myapp/base.html' %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-5">
+    <h1 class="text-3xl text-center font-bold mt-20 mb-10 text-green-600">Оформить заказ</h1>
+    <form method="post">
+        {% csrf_token %}
+        <div class="bg-white shadow-lg rounded-lg px-8 py-8 mb-8 border border-gray-200">
+            <h2 class="text-2xl font-bold mb-6">Ваши товары:</h2>
+            <div class="space-y-4">
+                {% for item in cart.items.all %}
+                    <div class="flex items-center justify-between bg-gray-50 rounded-lg p-4 border border-gray-200 mb-4">
+                        <div class="flex items-center">
+                            <img src="{{ item.product_size.product.image.url }}" alt="{{ item.product_size.product.name }}" class="w-16 h-16 rounded-md shadow-md mr-6">
+                            <div class="ml-4">
+                                <p class="text-gray-700 font-medium">{{ item.product_size.product.name }} ({{ item.product_size.size.name }})</p>
+                                <p class="text-gray-500 text-sm">Количество: {{ item.quantity }}</p>
+                            </div>
+                        </div>
+                        <div class="text-right ml-4">
+                            <p class="text-lg font-semibold">{{ item.subtotal }}₽</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="text-right mt-6">
+                <p class="text-xl font-bold">Итого: {{ cart.total }}₽</p>
+            </div>
+            <div class="flex justify-center mt-6">
+                <button class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4">Оформить заказ</button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock content %}

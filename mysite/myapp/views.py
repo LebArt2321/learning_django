@@ -6,9 +6,10 @@ from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
-from .models import Product, Category, Cart, CartItem, Size, ProductSize
-from users.models import CustomUser, Event, Favorite, Profile
+from .models import Product, Category, Cart, CartItem, Size, ProductSize, Order, OrderItem
+from users.models import CustomUser, Event, Favorite,  Profile
 from users.recommendations import recommend_tshirt_size, recommend_sweatshirt_size, recommend_pants_size
+from django.contrib import messages
 
 def autocomplete_search(request):
     query = request.GET.get('term', '')
@@ -85,13 +86,16 @@ class ProductDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        product = self.get_object()
+        available_sizes = product.product_sizes.filter(quantity_available__gt=0)
+        context['available_sizes'] = available_sizes
+        
         if self.request.user.is_authenticated:
             try:
                 user_profile = Profile.objects.get(user=self.request.user)
             except Profile.DoesNotExist:
                 user_profile = None
 
-            product = self.get_object()
             recommended_size = None
 
             if user_profile:
@@ -128,6 +132,7 @@ class ProductDetailView(DetailView):
                     return redirect(reverse('myapp:detail', kwargs={'pk': product_id}))
         else:
             return redirect('users:login')
+
 
 @login_required
 def add_item(request):
@@ -194,6 +199,10 @@ def delete_item(request, my_id):
     context = {'item': item}
     return render(request, "myapp/deleteitem.html", context)
 
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from .models import ProductSize, Cart, CartItem, Order, OrderItem
+
 @login_required
 def add_to_cart(request, product_size_id):
     product_size = get_object_or_404(ProductSize, pk=product_size_id)
@@ -202,16 +211,18 @@ def add_to_cart(request, product_size_id):
 
     cart_item, created = CartItem.objects.get_or_create(product_size=product_size, user=user)
 
-    if not created:
-        cart_item.quantity += 1
-        cart_item.save()
+    if product_size.quantity_available > cart_item.quantity:
+        if not created:
+            cart_item.quantity += 1
+            cart_item.save()
+        else:
+            cart_item.quantity = 1
+            cart_item.save()
+            cart.items.add(cart_item)
     else:
-        cart_item.quantity = 1
-        cart_item.save()
-        cart.items.add(cart_item)
+        messages.error(request, 'Извините, больше нет доступных товаров этого размера.')
 
     return redirect('myapp:cart')
-
 
 @login_required
 def cart_view(request):
@@ -235,3 +246,29 @@ def remove_single_from_cart(request, cart_item_id):
     else:
         cart_item.delete()
     return redirect('myapp:cart')
+
+@login_required
+def place_order(request):
+    cart = Cart.objects.get(user=request.user)
+    if request.method == 'POST':
+        total_price = cart.total()
+        order = Order.objects.create(user=request.user, total_price=total_price)
+        for item in cart.items.all():
+            OrderItem.objects.create(
+                order=order,
+                product_size=item.product_size,
+                quantity=item.quantity,
+                price=item.product_size.product.price
+            )
+            item.product_size.quantity_available -= item.quantity
+            item.product_size.save()
+        # Удаляем каждый элемент корзины вручную
+        cart.items.all().delete()
+        return redirect('myapp:order_history')
+    return render(request, 'myapp/place_order.html', {'cart': cart})
+
+
+@login_required
+def order_history(request):
+    orders = Order.objects.filter(user=request.user).order_by('-created_at')
+    return render(request, 'myapp/order_history.html', {'orders': orders})

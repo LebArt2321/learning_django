@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from .models import Product, Size, ProductSize
-from .models import Category, CartItem, Cart
+from .models import Category, CartItem, Cart, Order, OrderItem
 
 
 admin.site.site_header = "My Django App"
@@ -25,3 +25,5 @@ admin.site.register(CartItem)
 admin.site.register(Cart)
 admin.site.register(Size)
 admin.site.register(ProductSize)
+admin.site.register(Order)
+admin.site.register(OrderItem)

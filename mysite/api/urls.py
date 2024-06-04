@@ -1,10 +1,9 @@
-# api/urls.py
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import (
     ProductViewSet, CategoryViewSet, SizeViewSet, ProductSizeViewSet,
     CustomUserViewSet, ProfileViewSet, SellerProfileViewSet, EventViewSet, FavoriteViewSet,
-    RegisterView, api_root
+    RegisterView, api_root, OrderViewSet, OrderItemViewSet
 )
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
@@ -18,6 +17,8 @@ router.register(r'profiles', ProfileViewSet)
 router.register(r'seller-profiles', SellerProfileViewSet)
 router.register(r'events', EventViewSet)
 router.register(r'favorites', FavoriteViewSet)
+router.register(r'orders', OrderViewSet)
+router.register(r'order-items', OrderItemViewSet)
 
 urlpatterns = [
     path('', api_root, name='api-root'),

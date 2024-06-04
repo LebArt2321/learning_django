@@ -1,0 +1,46 @@
+{% extends 'myapp/base.html' %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-5">
+    <h1 class="text-3xl text-center font-bold mt-20 mb-10 text-green-600">История заказов</h1>
+    {% if orders %}
+        <div class="space-y-8">
+            {% for order in orders %}
+                <div class="bg-white shadow-lg rounded-lg p-6 transition duration-500 hover:shadow-2xl border border-gray-200 mb-6">
+                    <div class="flex justify-between items-center mb-4 px-4">
+                        <div class="mr-4 mt-2">
+                            <h3 class="text-xl font-semibold">Заказ ID: {{ order.id }}</h3>
+                            <p class="text-gray-500">Дата создания: <span class="font-medium">{{ order.created_at|date:"d M Y H:i" }}</span></p>
+                        </div>
+                        <div class="text-right ml-4">
+                            <p class="text-xl font-bold text-green-600">{{ order.total_price }} ₽</p>
+                            <p class="text-sm text-gray-500">Статус: <span class="font-medium">{{ order.status }}</span></p>
+                        </div>
+                    </div>
+                    <div class="px-4 mb-4">
+                        <h4 class="text-lg font-semibold mb-4">Товары:</h4>
+                        <ul class="space-y-4">
+                            {% for item in order.items.all %}
+                                <li class="flex items-center justify-between bg-gray-50 rounded-lg p-4 border border-gray-200 mb-2">
+                                    <div class="flex items-center mr-4">
+                                        <img src="{{ item.product_size.product.image.url }}" alt="{{ item.product_size.product.name }}" class="w-16 h-16 rounded-md shadow-md mr-6">
+                                        <div class="ml-4">
+                                            <p class="text-gray-700 font-medium">{{ item.product_size.product.name }} ({{ item.product_size.size.name }})</p>
+                                            <p class="text-gray-500 text-sm">Количество: {{ item.quantity }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="text-right ml-4">
+                                        <p class="text-lg font-semibold">{{ item.price }} ₽</p>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-center text-gray-600 mt-10">У вас нет заказов.</p>
+    {% endif %}
+</div>
+{% endblock %}

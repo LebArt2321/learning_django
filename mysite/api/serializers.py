@@ -1,6 +1,5 @@
-# api/serializers.py
 from rest_framework import serializers
-from myapp.models import Product, Category, Size, ProductSize
+from myapp.models import Product, Category, Size, ProductSize, Order, OrderItem
 from users.models import CustomUser, Profile, SellerProfile, Event, Favorite
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -17,7 +16,7 @@ class SizeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Size
         fields = '__all__'
-        
+
 class ProductSizeSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductSize
@@ -27,7 +26,6 @@ class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = '__all__'
-#        fields = ['id', 'username', 'email', 'is_seller']
 
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
@@ -48,10 +46,25 @@ class FavoriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Favorite
         fields = '__all__'
-        
-# api/serializers.py
-from rest_framework import serializers
-from users.models import CustomUser
+
+class OrderItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OrderItem
+        fields = ['product_size', 'quantity', 'price']
+
+class OrderSerializer(serializers.ModelSerializer):
+    items = OrderItemSerializer(many=True)
+
+    class Meta:
+        model = Order
+        fields = ['id', 'user', 'total_price', 'status', 'created_at', 'updated_at', 'items']
+
+    def create(self, validated_data):
+        items_data = validated_data.pop('items')
+        order = Order.objects.create(**validated_data)
+        for item_data in items_data:
+            OrderItem.objects.create(order=order, **item_data)
+        return order
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
@@ -68,4 +81,3 @@ class RegisterSerializer(serializers.ModelSerializer):
             is_seller=validated_data['is_seller']
         )
         return user
-

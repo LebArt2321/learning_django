@@ -1,6 +1,4 @@
-# api/views.py
-from rest_framework import viewsets  # Добавьте этот импорт
-from rest_framework import status
+from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
@@ -11,9 +9,9 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from .serializers import (
     ProductSerializer, CategorySerializer, SizeSerializer, ProductSizeSerializer,
     CustomUserSerializer, ProfileSerializer, SellerProfileSerializer, EventSerializer, FavoriteSerializer,
-    RegisterSerializer
+    RegisterSerializer, OrderSerializer, OrderItemSerializer
 )
-from myapp.models import Product, Category, Size, ProductSize
+from myapp.models import Product, Category, Size, ProductSize, Order, OrderItem
 from users.models import CustomUser, Profile, SellerProfile, Event, Favorite
 
 class ProductViewSet(viewsets.ModelViewSet):
@@ -52,6 +50,25 @@ class FavoriteViewSet(viewsets.ModelViewSet):
     queryset = Favorite.objects.all()
     serializer_class = FavoriteSerializer
 
+class OrderViewSet(viewsets.ModelViewSet):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return self.queryset.filter(user=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+class OrderItemViewSet(viewsets.ModelViewSet):
+    queryset = OrderItem.objects.all()
+    serializer_class = OrderItemSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return self.queryset.filter(order__user=self.request.user)
+
 class RegisterView(APIView):
     permission_classes = [AllowAny]
 
@@ -80,6 +97,8 @@ def api_root(request, format=None):
         'seller-profiles': reverse('sellerprofile-list', request=request, format=format),
         'events': reverse('event-list', request=request, format=format),
         'favorites': reverse('favorite-list', request=request, format=format),
+        'orders': reverse('order-list', request=request, format=format),
+        'order-items': reverse('orderitem-list', request=request, format=format),
         'register': reverse('register', request=request, format=format),
         'token': reverse('token_obtain_pair', request=request, format=format),
         'token-refresh': reverse('token_refresh', request=request, format=format),
