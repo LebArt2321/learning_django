@@ -5,30 +5,30 @@
 
     <h1 class="text-3xl text-center font-bold mt-20 mb-10 text-green-600">Добавить новый товар</h1>
 
-    <form class="w-full max-w-md mx-auto bg-white shadow-md rounded px-8 py-8 mb-4" enctype="multipart/form-data" method="post">
+    <form class="w-full max-w-md mx-auto bg-white shadow-md rounded px-8 py-8 mb-4" enctype="multipart/form-data" method="post" onsubmit="return validateForm()">
         {% csrf_token %}
         <div class="mb-4">
             <label class="block text-gray-700 text-md font-bold mb-2" for="name">Название товара</label>
             <input class="shadow appearance-none border rounded py-2 px-3 text-gray-700 mb-3 w-full focus:outline-none focus:shadow-outline" type="text"
-                placeholder="Название товара" name="name" id="name">
+                placeholder="Название товара" name="name" id="name" required>
 
             <label class="block text-gray-700 text-md font-bold mb-2" for="price">Цена товара</label>
             <input class="shadow appearance-none border rounded py-2 px-3 text-gray-700 mb-3 w-full focus:outline-none focus:shadow-outline" type="text"
-                placeholder="Цена товара" name="price" id="price">
+                placeholder="Цена товара" name="price" id="price" required>
 
             <label class="block text-gray-700 text-md font-bold mb-2" for="description">Описание товара</label>
             <input class="shadow appearance-none border rounded py-2 px-3 text-gray-700 mb-3 w-full focus:outline-none focus:shadow-outline" type="text"
-                placeholder="Описание товара" name="description" id="description">
+                placeholder="Описание товара" name="description" id="description" required>
 
             <label class="block text-gray-700 text-md font-bold mb-2" for="category">Категория товара</label>
-            <select class="shadow appearance-none border rounded py-2 px-3 mb-3 text-gray-700 w-full focus:outline-none focus:shadow-outline" name="category" id="category">
+            <select class="shadow appearance-none border rounded py-2 px-3 mb-3 text-gray-700 w-full focus:outline-none focus:shadow-outline" name="category" id="category" required>
                 {% for category in categories %}
                     <option value="{{ category.id }}">{{ category.name }}</option>
                 {% endfor %}
             </select>
 
             <label class="block text-gray-700 text-md font-bold mb-2" for="size">Размер товара</label>
-            <select class="shadow appearance-none border rounded py-2 px-3 mb-3 text-gray-700 w-full focus:outline-none focus:shadow-outline" name="size" id="size">
+            <select class="shadow appearance-none border rounded py-2 px-3 mb-3 text-gray-700 w-full focus:outline-none focus:shadow-outline" name="size" id="size" required>
                 {% for size in sizes %}
                     <option value="{{ size.id }}">{{ size.name }}</option>
                 {% endfor %}
@@ -36,13 +36,25 @@
 
             <label class="block text-gray-700 text-md font-bold mb-2" for="quantity">Количество товара</label>
             <input class="shadow appearance-none border rounded py-2 px-3 text-gray-700 mb-3 w-full focus:outline-none focus:shadow-outline" type="number"
-                placeholder="Количество товара" name="quantity" id="quantity" min="0">
+                placeholder="Количество товара" name="quantity" id="quantity" min="0" required>
 
-            <input class="block mt-4" type="file" accept="image/*" name="upload" id="upload">
+            <label class="block text-gray-700 text-md font-bold mb-2" for="upload">Изображение товара</label>
+            <input class="block mt-4" type="file" accept="image/*" name="upload" id="upload" required>
 
             <button class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4" type="submit" name="Add Item" value="Add Item">Добавить товар</button>
         </div>
     </form>
 </div>
+
+<script>
+    function validateForm() {
+        const imageInput = document.getElementById('upload');
+        if (imageInput.files.length === 0) {
+            alert('Пожалуйста, загрузите изображение товара.');
+            return false;
+        }
+        return true;
+    }
+</script>
 
 {% endblock content %}

@@ -1,5 +1,5 @@
 {% extends 'myapp/base.html' %}
-
+{% load humanize %}
 {% block content %}
 <style>
     body {
@@ -128,17 +128,17 @@
                 <div class="bg-gray-200 rounded-full w-32 h-32 mx-auto mb-4"></div>
                 {% endif %}
                 <h1 class="text-2xl font-bold mb-5">Покупатель: {{ user.username }}</h1>
-                <p class="text-gray-700">Номер телефона: {{ user.profile.contact_number }}</p>
-                <p class="text-gray-700">Рост: {{ user.profile.height }} см.</p>
-                <p class="text-gray-700">Размер ноги: {{ user.profile.foot_size }}</p>
-                <p class="text-gray-700">Обхват груди: {{ user.profile.chest_circumference }}</p>
-                <p class="text-gray-700">Обхват талии: {{ user.profile.waist_circumference }}</p>
-                <p class="text-gray-700">Обхват бедер: {{ user.profile.hip_girth }}</p>
-                <p class="text-gray-700">Ширина плеч: {{ user.profile.shoulder_width }}</p>
-                <p class="text-gray-700">Длина до плеча: {{ user.profile.length_shoulder }}</p>
-                <p class="text-gray-700">Длина брюк: {{ user.profile.pants_length }}</p>
+                <p class="text-gray-700">Номер телефона: {{ user.profile.contact_number|default_if_none:'' }}</p>
+                <p class="text-gray-700">Рост: {{ user.profile.height|default_if_none:'' }} см.</p>
+                <p class="text-gray-700">Обхват груди: {{ user.profile.chest_circumference|default_if_none:'' }} см.</p>
+                <p class="text-gray-700">Обхват талии: {{ user.profile.waist_circumference|default_if_none:'' }} см.</p>
+                <p class="text-gray-700">Обхват бедер: {{ user.profile.hip_girth|default_if_none:'' }} см.</p>
+                <p class="text-gray-700">Ширина плеч: {{ user.profile.shoulder_width|default_if_none:'' }} см.</p>
+                <p class="text-gray-700">Длина до плеча: {{ user.profile.length_shoulder|default_if_none:'' }} см.</p>
+                <p class="text-gray-700">Длина брюк: {{ user.profile.pants_length|default_if_none:'' }} см.</p>
+                <p class="text-gray-700">Размер ноги: {{ user.profile.foot_size|default_if_none:'' }}</p>
             </div>
-            <div class="favorites-container">
+            <div class="w-full mt-10">
                 <h2 class="font-bold text-lg mb-4 section-title">Избранное:</h2>
                 
                 <div class="products-container">
@@ -146,9 +146,14 @@
                     <a href="{% url 'myapp:detail' favorite.product.id %}" >
                         <div class="rounded overflow-hidden shadow-lg p-4 product">                           
                             <img src="{{ favorite.product.image.url }}" alt="{{ favorite.product.name }}" class="w-full h-32 object-cover mb-2">
-                            <p>{{ favorite.product.name }}</p>
-                        </div>
+                            <div class="product-details">
+                                <h3 class="font-bold text-xl mb-2">{{ favorite.product.name }}</h3>
+                                <p class="text-gray-700">{{ favorite.product.price | intcomma }} ₽</p>
+                            </div>
+
+                        
                     </a>
+		</div>
                     {% empty %}
                     <p class="text-gray-700">Избранные товары еще не были добавлены</p>
                     {% endfor %}

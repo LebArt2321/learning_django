@@ -2,31 +2,56 @@
 
 {% block content %}
 
+<style>
+    .checkbox-label {
+        display: flex;
+        align-items: center;
+        padding: 5px;
+    }
+
+    .checkbox-label input {
+        margin-right: 5px; /* Отступ между чекбоксом и текстом */
+        accent-color: black; /* Изменение цвета галочек */
+    }
+</style>
 <div class="container mx-auto mt-10">
     <h1 class="text-3xl text-center font-bold mt-20 mb-10 text-green-600">Редактировать профиль продавца</h1>
     <form method="post" enctype="multipart/form-data" class="max-w-md mx-auto bg-white shadow-md rounded px-8 py-8 mb-4">
         {% csrf_token %}
+        
         <div class="mb-4">
             <label class="block text-gray-700 text-md font-bold mb-2" for="id_image">Изображение</label>
-            {{ form.image }}
+            {% if seller_profile.image %}
+                <img src="{{ seller_profile.image.url }}" class="mb-3 max-w-full h-auto" alt="Текущее изображение профиля">
+            {% endif %}
+            <input class="shadow appearance-none border rounded py-2 px-3 text-gray-700 mb-3 w-full focus:outline-none focus:shadow-outline" type="file" name="image" id="id_image">
         </div>
 
         <div class="mb-4">
             <label class="block text-gray-700 text-md font-bold mb-2" for="id_contact_number">Номер контакта</label>
-            {{ form.contact_number }}
+            <input class="shadow appearance-none border rounded py-2 px-3 text-gray-700 mb-3 w-full focus:outline-none focus:shadow-outline" type="text" name="contact_number" id="id_contact_number" value="{{ form.contact_number.value|default_if_none:'' }}">
         </div>
 
         <div class="mb-4">
             <label class="block text-gray-700 text-md font-bold mb-2" for="id_seller_description">Описание продавца</label>
-            {{ form.seller_description }}
+            <input class="shadow appearance-none border rounded py-2 px-3 text-gray-700 mb-3 w-full focus:outline-none focus:shadow-outline" type="text" name="seller_description" id="id_seller_description" value="{{ form.seller_description.value|default_if_none:'' }}">
         </div>
 
         <div class="mb-4">
             <label class="block text-gray-700 text-md font-bold mb-2" for="id_background_image">Фоновое изображение</label>
-            {{ form.background_image }}
+            {% if seller_profile.background_image %}
+                <img src="{{ seller_profile.background_image.url }}" class="mb-3 max-w-full h-auto" alt="Текущее фоновое изображение">
+                <div class="mb-3">
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="clear_background_image" id="clear_background_image">
+                        Очистить фоновое изображение
+                    </label>
+                </div>
+            {% endif %}
+            <input class="shadow appearance-none border rounded py-2 px-3 text-gray-700 mb-3 w-full focus:outline-none focus:shadow-outline" type="file" name="background_image" id="id_background_image">
         </div>
 
-        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4 focus:outline-none focus:shadow-outline">Сохранить изменения</button>
+        <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-4 focus:outline-none focus:shadow-outline">Сохранить изменения</button>
     </form>
 </div>
 

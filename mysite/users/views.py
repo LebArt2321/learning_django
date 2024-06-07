@@ -63,7 +63,7 @@ def edit_profile(request):
     else:
         form = ProfileForm(instance=profile)
 
-    return render(request, 'users/edit_profile.html', {'form': form})
+    return render(request, 'users/edit_profile.html', {'form': form, 'profile': profile})
 
 
 def seller_profile(request, user_id=None):
@@ -117,6 +117,8 @@ def edit_seller_profile(request, user_id=None):
         form = SellerProfileForm(request.POST, request.FILES, instance=seller_profile)
         if form.is_valid():
             seller_profile = form.save(commit=False)
+            if request.POST.get('clear_background_image'):
+                seller_profile.background_image.delete()
             seller_profile.user = user
             seller_profile.save()
             return redirect('users:sellerprofile', user_id=request.user.id)

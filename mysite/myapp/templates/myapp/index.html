@@ -836,23 +836,29 @@
         {% endfor %}
       
         <div class="w-full mt-10">
-          <h2 class="font-bold text-2xl mb-4 section-title">Мероприятия</h2>
-          <div class="events-container">
-              {% for event in events %}
-              <div class="rounded overflow-hidden shadow-lg p-4 event">
-                  {% if event.image %}
-                  <img src="{{ event.image.url }}" alt="{{ event.name }}" class="w-full h-33 object-cover mb-2">
-                  {% endif %}
-                  <div class="event-details">
-                      <h3 class="font-bold text-xl mb-2">{{ event.name }}</h3>
-                      <p class="text-gray-700">{{ event.date }}</p>
-                  </div>
-              </div>
-              {% empty %}
-              <p class="text-gray-700">Мероприятий пока нет.</p>
-              {% endfor %}
-          </div>
-      </div>
+            <h2 class="font-bold text-2xl mb-4 section-title">Последние мероприятия</h2>
+            <div class="events-container">
+                {% for event in events %}
+                <div class="rounded overflow-hidden shadow-lg p-4 event">
+                    {% if event.image %}
+                    <a href="{% url 'myapp:event_detail' event.id %}">
+                        <img src="{{ event.image.url }}" alt="{{ event.name }}" class="w-full h-33 object-cover mb-2">
+                    </a>
+                    {% endif %}
+                    <div class="event-details">
+                        <a href="{% url 'myapp:event_detail' event.id %}">
+                            <h3 class="font-bold text-xl mb-2">{{ event.name }}</h3>
+                            
+                        </a>
+                        <p class="text-gray-700">{{ event.date }}</p>
+                        <a href="{% url 'users:sellerprofile' event.organizer.id %}" class="text-blue-500 hover:text-blue-700">{{ event.organizer.username }}</a>
+                    </div>
+                </div>
+                {% empty %}
+                <p class="text-gray-700">Мероприятий пока нет.</p>
+                {% endfor %}
+            </div>
+        </div>
 
 
   <div class="my-5 flex justify-center items-center mt-4">

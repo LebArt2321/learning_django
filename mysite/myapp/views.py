@@ -19,6 +19,8 @@ def autocomplete_search(request):
     results = list(product_results) + list(event_results)
     return JsonResponse(results, safe=False)
 
+from django.core.paginator import Paginator
+
 class ProductListView(ListView):
     model = Product
     template_name = 'myapp/index.html'
@@ -51,20 +53,29 @@ class ProductListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        sellers = CustomUser.objects.filter(is_seller=True)
-        events = Event.objects.all()
         categories = Category.objects.all()
-
-        paginator = Paginator(events, self.paginate_by)
-        page = self.request.GET.get('page')
-
+        # Sellers pagination
+        sellers = CustomUser.objects.filter(is_seller=True)
+        seller_paginator = Paginator(sellers, self.paginate_by)
+        seller_page = self.request.GET.get('seller_page', 1)
         try:
-            events = paginator.page(page)
+            sellers = seller_paginator.page(seller_page)
         except PageNotAnInteger:
-            events = paginator.page(1)
+            sellers = seller_paginator.page(1)
         except EmptyPage:
-            events = paginator.page(paginator.num_pages)
-
+            sellers = seller_paginator.page(seller_paginator.num_pages)
+        
+        # Events pagination
+        events = Event.objects.all()
+        event_paginator = Paginator(events, self.paginate_by)
+        event_page = self.request.GET.get('event_page', 1)
+        try:
+            events = event_paginator.page(event_page)
+        except PageNotAnInteger:
+            events = event_paginator.page(1)
+        except EmptyPage:
+            events = event_paginator.page(event_paginator.num_pages)
+        
         filters = self.request.GET.get('filters', '')
         filters_list = [f for f in filters.split(',') if f]
 
@@ -78,6 +89,7 @@ class ProductListView(ListView):
         context['selected_categories'] = selected_categories
 
         return context
+
 
 class ProductDetailView(DetailView):
     model = Product
@@ -190,6 +202,21 @@ def update_item(request, my_id):
     context = {'item': item}
     return render(request, "myapp/updateitem.html", context)
 
+# дата
+def update_event(request, my_id):
+    event = Event.objects.get(id=my_id)
+    if request.method == 'POST':
+        event.name = request.POST.get("name")
+        event.image = request.FILES.get('upload', event.image)
+        event.description = request.POST.get("description")
+        date_str = request.POST.get("date")
+        event.date = datetime.strptime(date_str, "%Y-%m-%d").date() if date_str else None
+        event.save()
+        return redirect("/")
+    
+    context = {'event': event}
+    return render(request, "myapp/updateevent.html", context)
+
 def delete_item(request, my_id):
     item = Product.objects.get(id=my_id)
     if request.method == "POST":
@@ -198,6 +225,15 @@ def delete_item(request, my_id):
 
     context = {'item': item}
     return render(request, "myapp/deleteitem.html", context)
+
+def delete_event(request, my_id):
+    event = Event.objects.get(id=my_id)
+    if request.method == "POST":
+        event.delete()
+        return redirect("/")
+
+    context = {'event': event}
+    return render(request, "myapp/deleteevent.html", context)
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
@@ -272,3 +308,9 @@ def place_order(request):
 def order_history(request):
     orders = Order.objects.filter(user=request.user).order_by('-created_at')
     return render(request, 'myapp/order_history.html', {'orders': orders})
+
+
+class EventDetailView(DetailView):
+    model = Event
+    template_name = 'myapp/event_detail.html'
+    context_object_name = 'event'

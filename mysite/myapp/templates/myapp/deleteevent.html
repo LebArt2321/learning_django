@@ -1,0 +1,18 @@
+{% extends 'myapp/base.html' %}
+{% block content %}
+
+<h1 class="text-2xl m-20 text-center font-bold text-green-600">Удалить мероприятие</h1>
+<form class="w-full max-w-md mx-auto bg-white shadow-md rounded px-8 py-8 mb-4" method="post">
+    {% csrf_token %}
+    <div class="mb-4">
+        <label class="block text-gray-700 text-md fond-bold mb-2">Вы уверены, что хотите удалить данное мероприятие?</label>
+        <label class="block text-gray-900 text-md fond-bold mb-2">{{ event.name }}</label>
+        <img class="w-60 h-60" src="{{ event.image.url }}">
+    </div>
+    <div class="mt-5 flex space-x-3">
+        <button class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"><a href="{% url 'myapp:index' %}">Отмена</a></button>
+        <button class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600">Удалить</button>
+    </div>
+</form>
+
+{% endblock content %}

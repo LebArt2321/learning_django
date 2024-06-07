@@ -5,27 +5,38 @@
 
     <h1 class="text-3xl text-center mt-20 font-bold mb-10 text-green-600">Добавить новый ивент</h1>
 
-    <form class="w-full max-w-md mx-auto bg-white shadow-md rounded px-8 py-8 mb-4" enctype="multipart/form-data" method="post">
+    <form class="w-full max-w-md mx-auto bg-white shadow-md rounded px-8 py-8 mb-4" enctype="multipart/form-data" method="post" onsubmit="return validateForm()">
         {% csrf_token %}
         <div class="mb-4">
             <label class="block text-gray-700 text-md font-bold mb-2" for="name">Название ивента</label>
             <input class="shadow appearance-none border rounded py-2 px-3 text-gray-700 mb-3 w-full focus:outline-none focus:shadow-outline" type="text"
-                placeholder="Название ивента" name="name" id="name">
+                placeholder="Название ивента" name="name" id="name" required>
 
             <label class="block text-gray-700 text-md font-bold mb-2" for="date">Дата ивента</label>
             <input class="shadow appearance-none border rounded py-2 px-3 text-gray-700 mb-3 w-full focus:outline-none focus:shadow-outline" type="date"
-                placeholder="Дата..." name="date" id="date">
+                placeholder="Дата..." name="date" id="date" required>
             
-            <label class="block text-gray-700 text-md font-bold mb-2" for="name">Описание ивента</label>
+            <label class="block text-gray-700 text-md font-bold mb-2" for="description">Описание ивента</label>
             <input class="shadow appearance-none border rounded py-2 px-3 text-gray-700 mb-3 w-full focus:outline-none focus:shadow-outline" type="text"
-                placeholder="Описание ивента" name="description" id="description">
+                placeholder="Описание ивента" name="description" id="description" required>
 
             <label class="block text-gray-700 text-md font-bold mb-2" for="upload">Изображение ивента</label>
-            <input class="block mt-4" type="file" accept="image/*" name="upload" id="upload">
+            <input class="block mt-4" type="file" accept="image/*" name="upload" id="upload" required>
 
             <button class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4" type="submit" name="Add Event" value="Add Event">Добавить ивент</button>
         </div>
     </form>
 </div>
+
+<script>
+    function validateForm() {
+        const imageInput = document.getElementById('upload');
+        if (imageInput.files.length === 0) {
+            alert('Пожалуйста, загрузите изображение ивента.');
+            return false;
+        }
+        return true;
+    }
+</script>
 
 {% endblock content %}

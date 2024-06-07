@@ -1,64 +1,67 @@
 {% extends 'myapp/base.html' %}
 
 {% block content %}
-<div class="container mx-auto p-5">
+<div class="container mx-auto px-4 py-5">
     <h1 class="text-3xl text-center font-bold mt-20 mb-10 text-green-600">Изменить профиль</h1>
-    <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" method="post" enctype="multipart/form-data">
+    
+    <form class="w-full max-w-md mx-auto bg-white shadow-md rounded px-8 py-8 mb-4" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         
         <div class="mb-4">
             <label class="block text-gray-700 text-md font-bold mb-2" for="id_image">Изображение профиля</label>
-            {{ form.image }}
+            {% if profile.image %}
+                <img src="{{ profile.image.url }}" class="mb-3 max-w-full h-auto" alt="Текущее изображение профиля">
+            {% endif %}
+            <input class="shadow appearance-none border rounded py-2 px-3 text-gray-700 mb-3 w-full focus:outline-none focus:shadow-outline" type="file" name="image" id="id_image">
         </div>
 
         <div class="mb-4">
             <label class="block text-gray-700 text-md font-bold mb-2" for="id_contact_number">Номер телефона</label>
-            {{ form.contact_number }}
+            <input class="shadow appearance-none border rounded py-2 px-3 text-gray-700 mb-3 w-full focus:outline-none focus:shadow-outline" type="text" name="contact_number" id="id_contact_number" value="{{ form.contact_number.value|default_if_none:'' }}">
         </div>
 
         <div class="mb-4">
             <label class="block text-gray-700 text-md font-bold mb-2" for="id_height">Рост</label>
-            {{ form.height }}
+            <input class="shadow appearance-none border rounded py-2 px-3 text-gray-700 mb-3 w-full focus:outline-none focus:shadow-outline" type="text" name="height" id="id_height" value="{{ form.height.value|default_if_none:'' }}">
         </div>
 
         <div class="mb-4">
             <label class="block text-gray-700 text-md font-bold mb-2" for="id_foot_size">Размер ноги</label>
-            {{ form.foot_size }}
+            <input class="shadow appearance-none border rounded py-2 px-3 text-gray-700 mb-3 w-full focus:outline-none focus:shadow-outline" type="text" name="foot_size" id="id_foot_size" value="{{ form.foot_size.value|default_if_none:'' }}">
         </div>
 
         <div class="mb-4">
             <label class="block text-gray-700 text-md font-bold mb-2" for="id_chest_circumference">Обхват груди</label>
-            {{ form.chest_circumference }}
+            <input class="shadow appearance-none border rounded py-2 px-3 text-gray-700 mb-3 w-full focus:outline-none focus:shadow-outline" type="text" name="chest_circumference" id="id_chest_circumference" value="{{ form.chest_circumference.value|default_if_none:'' }}">
         </div>
 
         <div class="mb-4">
             <label class="block text-gray-700 text-md font-bold mb-2" for="id_waist_circumference">Обхват талии</label>
-            {{ form.waist_circumference }}
+            <input class="shadow appearance-none border rounded py-2 px-3 text-gray-700 mb-3 w-full focus:outline-none focus:shadow-outline" type="text" name="waist_circumference" id="id_waist_circumference" value="{{ form.waist_circumference.value|default_if_none:'' }}">
         </div>
 
         <div class="mb-4">
             <label class="block text-gray-700 text-md font-bold mb-2" for="id_hip_girth">Обхват бедер</label>
-            {{ form.hip_girth }}
+            <input class="shadow appearance-none border rounded py-2 px-3 text-gray-700 mb-3 w-full focus:outline-none focus:shadow-outline" type="text" name="hip_girth" id="id_hip_girth" value="{{ form.hip_girth.value|default_if_none:'' }}">
         </div>
 
         <div class="mb-4">
             <label class="block text-gray-700 text-md font-bold mb-2" for="id_shoulder_width">Ширина плеч</label>
-            {{ form.shoulder_width }}
+            <input class="shadow appearance-none border rounded py-2 px-3 text-gray-700 mb-3 w-full focus:outline-none focus:shadow-outline" type="text" name="shoulder_width" id="id_shoulder_width" value="{{ form.shoulder_width.value|default_if_none:'' }}">
         </div>
 
         <div class="mb-4">
             <label class="block text-gray-700 text-md font-bold mb-2" for="id_length_shoulder">Длина до плеча</label>
-            {{ form.length_shoulder }}
+            <input class="shadow appearance-none border rounded py-2 px-3 text-gray-700 mb-3 w-full focus:outline-none focus:shadow-outline" type="text" name="length_shoulder" id="id_length_shoulder" value="{{ form.length_shoulder.value|default_if_none:'' }}">
         </div>
 
         <div class="mb-4">
             <label class="block text-gray-700 text-md font-bold mb-2" for="id_pants_length">Длина брюк</label>
-            {{ form.pants_length }}
+            <input class="shadow appearance-none border rounded py-2 px-3 text-gray-700 mb-3 w-full focus:outline-none focus:shadow-outline" type="text" name="pants_length" id="id_pants_length" value="{{ form.pants_length.value|default_if_none:'' }}">
         </div>
 
-            <div style="text-align: center">
-                <button class="mt-8 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700" type="submit">Сохранить изменения</button>
-            </div>
+        <div style="text-align: center">
+            <button class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4" type="submit">Сохранить изменения</button>
         </div>
     </form>
 </div>
